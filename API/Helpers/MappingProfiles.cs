@@ -16,6 +16,8 @@ namespace API.Helpers
 
             //Con ReverseMap nos aseguramos que se mapee desde el objeto origen al destino y viceversa.
             CreateMap<Address, AddressDto>().ReverseMap();
+            CreateMap<CustomerBasketDto, CustomerBasket>();
+            CreateMap<BasketItemDto, BasketItem>();
         }
     }
 }
