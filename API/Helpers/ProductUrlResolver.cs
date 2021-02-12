@@ -13,7 +13,8 @@ namespace API.Helpers
             _config = config;
         }
 
-        public string Resolve(Product source, ProductToReturnDto destination, string destMember, ResolutionContext context)
+        public string Resolve(Product source, ProductToReturnDto destination, string destMember,
+         ResolutionContext context)
         {
             if (!string.IsNullOrEmpty(source.PictureUrl))
             {
