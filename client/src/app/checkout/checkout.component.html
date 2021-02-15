@@ -5,8 +5,9 @@
                 <cdk-step [label]="'Address'" [completed]="(checkoutForm.get('addressForm')).valid">
                     <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
                 </cdk-step>
-                <cdk-step [label]="'Delivery'" [completed]="(checkoutForm.get('deliveryForm')).valid">
-                    <app-checkout-delivery [checkoutForm]="checkoutForm"></app-checkout-delivery>
+                <cdk-step [label]="'Delivery'" 
+                    [completed]="(checkoutForm.get('deliveryForm')).valid">
+                <app-checkout-delivery [checkoutForm]="checkoutForm"></app-checkout-delivery>
                 </cdk-step>
                 <cdk-step [label]="'Review'">
                     <app-checkout-review></app-checkout-review>
@@ -17,7 +18,13 @@
             </app-stepper>
         </div>
         <div class="col-4">
-            <app-order-totals></app-order-totals>
+            <app-order-totals
+                *ngIf="(basketTotals$ | async)"
+                [shippingPrice]="(basketTotals$ | async).shipping"
+                [subtotal]="(basketTotals$ | async).subtotal"
+                [total]="(basketTotals$ | async).total"
+            ></app-order-totals
+                >
         </div>
     </div>
 </div>
