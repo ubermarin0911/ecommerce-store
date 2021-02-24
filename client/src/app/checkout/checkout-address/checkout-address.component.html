@@ -32,7 +32,7 @@
 </div>
 
 <div class="float-none d-flex justify-content-between flex-column flex-lg-row mb-4">
-    <button class="btn btn-outline-primary" routerLink="/basket">
+    <button class="btn btn-outline-primary mb-2 mb-md-0" routerLink="/basket">
         <i class="fa fa-angle-left"></i> Back to Basket
     </button>
     <button [disabled]="checkoutForm.get('addressForm').invalid" class="btn btn-primary" cdkStepperNext>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BasketService } from './basket/basket.service';
 import { AccountService } from './account/account.service';
+import '@fortawesome/fontawesome-free/js/all.js';
 
 @Component({
   selector: 'app-root',
