@@ -21,3 +21,17 @@ label.xng-breadcrumb-trail{
 .xng-breadcrumb-separator {
     padding: 0 0;
 }
+
+body, html{
+    height: 100%;
+}
+
+app-root{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+app-footer{
+    margin-top: auto;
+}
