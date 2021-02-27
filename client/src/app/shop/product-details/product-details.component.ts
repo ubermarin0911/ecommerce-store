@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbService } from 'xng-breadcrumb';
 import { IProduct } from '../../shared/models/product';
@@ -10,7 +10,7 @@ import { BasketService } from '../../basket/basket.service';
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss']
 })
-export class ProductDetailsComponent implements OnInit {
+export class ProductDetailsComponent implements OnInit{
   product: IProduct;
   quantity = 1;
 
@@ -48,5 +48,4 @@ export class ProductDetailsComponent implements OnInit {
       console.log(error);
     });
   }
-
 }

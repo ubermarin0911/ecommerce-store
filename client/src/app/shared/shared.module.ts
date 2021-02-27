@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { PagingHeaderComponent } from './components/paging-header/paging-header.component';
 import { PagerComponent } from './components/pager/pager.component';
 import { OrderTotalsComponent } from './components/order-totals/order-totals.component';
@@ -12,6 +13,8 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
 import { StepperComponent } from './components/stepper/stepper.component';
 import { BasketSummaryComponent } from './components/basket-summary/basket-summary.component';
 import { RouterModule } from '@angular/router';
+import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 
 @NgModule({
   declarations: [PagingHeaderComponent, 
@@ -19,16 +22,20 @@ import { RouterModule } from '@angular/router';
     OrderTotalsComponent, 
     TextInputComponent, 
     StepperComponent, 
-    BasketSummaryComponent],
+    BasketSummaryComponent, 
+    ImageGalleryComponent
+  ],
   imports: [
     CommonModule,
     PaginationModule.forRoot(),
     CarouselModule.forRoot(),
     BsDropdownModule.forRoot(),
+    CollapseModule.forRoot(),
     ReactiveFormsModule,
     FormsModule,
     CdkStepperModule,
-    RouterModule
+    RouterModule,
+    NgxGalleryModule 
   ],
   exports:[
     PaginationModule,
@@ -39,10 +46,13 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     FormsModule,
     BsDropdownModule,
+    CollapseModule,
     TextInputComponent,
     CdkStepperModule,
     StepperComponent,
-    BasketSummaryComponent
-  ]
+    BasketSummaryComponent,
+    NgxGalleryModule,
+    ImageGalleryComponent
+  ],
 })
 export class SharedModule { }

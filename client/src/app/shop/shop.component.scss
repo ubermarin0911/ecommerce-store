@@ -17,5 +17,26 @@
         background-color: rgba(233, 86, 32, 0.705);
         border-radius: 10px;
     }
+}
 
+select{
+    border-color: #38b44a;
+}
+
+@media screen and (min-width:370px){
+    .search{
+        width: 180px;
+    }
+}
+
+@media screen and (min-width:402px){
+    .search{
+        width: 220px;
+    }
+}
+
+@media screen and (min-width:500px){
+    .search{
+        width: 300px;
+    }
 }

@@ -1,59 +1,87 @@
 <div class="container mt-3">
   <div class="row">
     
-    <section class="col-3">
+    <section class="col-12 col-lg-3">
     <ng-container *ngIf="types && brands">
-      <h5 class="text-warning ml-3 mt-4 mb-3">Sort</h5>
-      <select class="custom-select mb-4" (change)="onSortSelected($event.target.value)">
-        <option  *ngFor="let sort of sortOptions"
-          [selected]="shopParams.sort === sort.value"
-          [value]="sort.value">
-          {{sort.name}}
-        </option>
-      </select>
 
-      <h5 class="text-warning ml-3">Brands</h5>
-      <ul class="list-group my-3">
-        <li class="list-group-item" 
-        *ngFor="let brand of brands"
-        [class.active]="brand.id === this.shopParams.brandId"
-        [value]="brand.id"
-        (click)="onBrandSelected(brand.id)">
-          {{brand.name}}
-        </li>
-         
-      </ul>
-      <h5 class="text-warning ml-3">Types</h5>
-      <ul class="list-group my-3">
-        <li class="list-group-item" 
-        *ngFor="let type of types"
-        [class.active]="type.id === this.shopParams.typeId"
-        [value]="type.id"
-        (click)="onTypeSelected(type.id)"
-        >
-          {{type.name}}
-        </li>
-      </ul>
+      <div class="row no-gutters">
+        <div class="col-4 col-lg-12 px-1 px-lg-0">
+          <h5 class="text-success mt-lg-3 mb-lg-3">Sort</h5>
+        
+          <select class="custom-select text-success mb-4" (change)="onSortSelected($event.target.value)">
+            <option  *ngFor="let sort of sortOptions"
+              [selected]="shopParams.sort === sort.value"
+              [value]="sort.value">
+              {{sort.name}}
+            </option>
+          </select>
+        </div>
+        
+        <div class="col-4 col-lg-12 px-1 px-lg-0">
+          <h5 class="text-success">Brands</h5>
+          
+          <button type="button" class="btn btn-outline-success btn-block mb-lg-3" (click)="isCollapsedBrands = !isCollapsedBrands"
+            [attr.aria-expanded]="!isCollapsedBrands" aria-controls="collapseBrands">Especies
+            <i class="fa fa-chevron-down fa-sm"></i>
+          </button>
+          <div id="collapseBrands" [collapse]="isCollapsedBrands" [isAnimated]="true">
+            <ul class="list-group my-3">
+              <li class="list-group-item" 
+                *ngFor="let brand of brands"
+                [class.active]="brand.id === this.shopParams.brandId"
+                [value]="brand.id"
+                (click)="onBrandSelected(brand.id)">
+                  {{brand.name}}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-4 col-lg-12 px-1 px-lg-0">
+          <h5 class="text-success">Types</h5>
+
+          <button type="button" class="btn btn-outline-success btn-block mb-lg-3" (click)="isCollapsedTypes = !isCollapsedTypes"
+            [attr.aria-expanded]="!isCollapsedTypes" aria-controls="collapseTypes">Tipos
+            <i class="fa fa-chevron-down fa-sm"></i>
+          </button>
+          <div id="collapseTypes" [collapse]="isCollapsedTypes" [isAnimated]="true">
+            <ul class="list-group my-3">
+              <li class="list-group-item" 
+              *ngFor="let type of types"
+              [class.active]="type.id === this.shopParams.typeId"
+              [value]="type.id"
+              (click)="onTypeSelected(type.id)">
+                {{type.name}}
+              </li>
+            </ul>
+          </div>
+        
+        </div>
+      </div>
+
     </ng-container>
     </section>
-    
-    <section class="col-9">
-      <div class="d-flex justify-content-between align-items-center pb-2">
+    <!-- d-flex justify-content-between align-items-center -->
+
+    <section class="col-12 col-lg-9">
+      <div class="row pb-2 d-flex justify-content-between align-items-center">
        
-        <app-paging-header 
+        <div class="col-12 col-lg-4">
+          <app-paging-header 
           [totalCount]="totalCount"
           [pageSize]="this.shopParams.pageSize"
           [pageNumber]="this.shopParams.pageNumber"></app-paging-header>
+        </div>
 
-        <div class="form-inline" *ngIf="products">
-          <input (keyup.enter)="onSearch()" type="text" class="form-control mr-2" #search style="width:300px" placeholder="Search">
+        <div class="col-12 col-lg-8 d-lg-flex justify-content-lg-end form-inline" *ngIf="products">
+          <input (keyup.enter)="onSearch()" type="text" class="form-control mr-1 mr-lg-2 search" #search placeholder="Search">
           <button (click)="onSearch()" class="btn btn-outline-primary my-2">Search</button>
-          <button (click)="onReset()" class="btn btn-outline-success ml-2 my-2">Reset</button>
+          <button (click)="onReset()" class="btn btn-outline-success ml-1 ml-lg-2 my-2 px-1 px-xl-3">Reset</button>
         </div>
       </div>
       
       <div class="row">
-        <div class="col-4 mb-4" *ngFor="let item of products">
+        <div class="col-6 col-md-4 mb-4" *ngFor="let item of products">
           <app-product-item [product]="item"></app-product-item>
         </div>
       </div>
