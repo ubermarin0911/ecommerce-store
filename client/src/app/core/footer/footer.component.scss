@@ -1,0 +1,27 @@
+.bg-container{
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    padding: 3em 2em;
+}
+
+.icon-social{
+    display: inline;
+    margin-right: 1em;
+}
+
+ul{
+    padding:1em 0;
+}
+
+li{
+    list-style-type: none;
+    padding: 4px 0;
+    & a{
+        text-decoration: none;
+        color: var(--white-color);
+
+        &:hover{
+            color: var(--hover-color);
+        }
+    }
+}
