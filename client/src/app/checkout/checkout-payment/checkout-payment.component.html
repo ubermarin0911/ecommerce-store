@@ -1,8 +1,22 @@
+<div class="float-none d-flex justify-content-between flex-column flex-lg-row mt-4">
+  <button class="btn btn-outline-primary mb-2 mb-md-0" cdkStepperPrevious>
+      <i class="fa fa-angle-left"></i> Regresar
+  </button>
+  <button [disabled]="loading 
+    || checkoutForm.get('paymentForm').invalid
+    || !cardNumberValid
+    || !cardExpiryValid
+    || !cardCvcValid" class="btn btn-primary" (click)="submitOrder()">
+      Realizar compra  <i class="fa fa-angle-right"></i> 
+      <i *ngIf="loading" class="fa fa-spinner fa-spin"></i>
+  </button>
+</div>
+
 <div class="mt-4" [formGroup]="checkoutForm">
   <div class="row">
     <div class="form-group col-12" formGroupName="paymentForm">
       <app-text-input 
-        [label]="'Name on card'" 
+        [label]="'Nombre en la tarjeta'" 
         formControlName="nameOnCard">
       </app-text-input>
     </div>
@@ -19,18 +33,4 @@
       <div #cardCvc class="form-control py-3"></div>
     </div>
   </div>
-</div>
-
-<div class="float-none d-flex justify-content-between flex-column flex-lg-row mb-4">
-    <button class="btn btn-outline-primary mb-2 mb-md-0" cdkStepperPrevious>
-        <i class="fa fa-angle-left"></i> Back to Review
-    </button>
-    <button [disabled]="loading 
-      || checkoutForm.get('paymentForm').invalid
-      || !cardNumberValid
-      || !cardExpiryValid
-      || !cardCvcValid" class="btn btn-primary" (click)="submitOrder()">
-        Submit Order  <i class="fa fa-angle-right"></i> 
-        <i *ngIf="loading" class="fa fa-spinner fa-spin"></i>
-    </button>
 </div>

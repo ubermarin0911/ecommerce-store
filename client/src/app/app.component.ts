@@ -9,7 +9,7 @@ import { AccountService } from './account/account.service';
 })
 export class AppComponent  implements OnInit{
 
-  title = 'Ecommerce';
+  title = 'Plantas pido';
 
   constructor(private basketService: BasketService, private accountService: AccountService){}
 

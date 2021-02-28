@@ -18,9 +18,9 @@ export class ShopComponent implements OnInit {
   shopParams : ShopParams;
   totalCount : number;
   sortOptions = [
-    {name: 'Alphabetical', value: 'name'},
-    {name: 'Price: Low to High', value: 'priceAsc'},
-    {name: 'Price: High to Low', value: 'priceDesc'}
+    {name: 'Alfabeto: A - Z', value: 'name'},
+    {name: 'Menor precio', value: 'priceAsc'},
+    {name: 'Mayor precio', value: 'priceDesc'}
   ];
 
   isCollapsedBrands = true;
@@ -107,5 +107,4 @@ export class ShopComponent implements OnInit {
     this.shopService.setShopParams(this.shopParams);
     this.getProducts();
   }
-
 }

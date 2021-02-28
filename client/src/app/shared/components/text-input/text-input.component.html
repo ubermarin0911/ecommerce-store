@@ -15,13 +15,13 @@
 
     <div class="invalid-feedback" *ngIf="(controlDir && controlDir.control &&
         !controlDir.control.valid && controlDir.control.touched)">
-        <span *ngIf="controlDir.control.errors?.required">{{label}} is required</span>
-        <span *ngIf="controlDir.control.errors?.pattern">Invalid email address</span>
+        <span *ngIf="controlDir.control.errors?.required">{{label}} es requerido</span>
+        <span *ngIf="controlDir.control.errors?.pattern">Correo electrónico no válido</span>
     </div>
 
     <div class="invalid-feedback d-block" *ngIf="(controlDir && controlDir.control &&
     !controlDir.control.valid && controlDir.control.dirty)">
-        <span *ngIf="controlDir.control.errors?.emailExists">Email address is in use</span>
+        <span *ngIf="controlDir.control.errors?.emailExists">Correo electrónico en uso</span>
     </div>
 
 </div>

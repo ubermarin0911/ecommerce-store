@@ -1,5 +1,14 @@
+<div class="float-none d-flex justify-content-between flex-column flex-lg-row mt-4">
+    <button class="btn btn-outline-primary mb-2 mb-md-0" cdkStepperPrevious>
+        <i class="fa fa-angle-left"></i> Regresar
+    </button>
+    <button [disabled]="checkoutForm.get('deliveryForm').invalid" class="btn btn-primary" cdkStepperNext>
+      Continuar  <i class="fa fa-angle-right"></i> 
+    </button>
+</div>
+
 <div class="mt-4" [formGroup]="checkoutForm">
-    <h4 class="mb-3">Choose your delivery method</h4>
+    <h4 class="mb-3">Elige un método de envío</h4>
     <div class="row ml-5" formGroupName="deliveryForm">
         <div class="col-6 form-group" *ngFor="let method of deliveryMethods">
             <input type="radio" 
@@ -17,11 +26,3 @@
     </div>
 </div>       
 
-<div class="float-none d-flex justify-content-between flex-column flex-lg-row mb-4">
-    <button class="btn btn-outline-primary mb-2 mb-md-0" cdkStepperPrevious>
-        <i class="fa fa-angle-left"></i> Back to Address
-    </button>
-    <button [disabled]="checkoutForm.get('deliveryForm').invalid" class="btn btn-primary" cdkStepperNext>
-      Go to Review  <i class="fa fa-angle-right"></i> 
-    </button>
-</div>

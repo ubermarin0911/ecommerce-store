@@ -1,3 +1,13 @@
+<div class="float-none d-flex justify-content-between flex-column flex-lg-row mt-4">
+    <button class="btn btn-outline-primary mb-2 mb-md-0" cdkStepperPrevious>
+        <i class="fa fa-angle-left"></i> Regresar
+    </button>
+    <button class="btn btn-primary" (click)="createPaymentIntent()">
+        Continuar <i class="fa fa-angle-right"></i> 
+    </button>
+</div>
+
+
 <div class="mt-4">
     <app-basket-summary 
         [isBasket]=false
@@ -6,11 +16,3 @@
     </app-basket-summary>
 </div>
 
-<div class="float-none d-flex justify-content-between flex-column flex-lg-row mb-5">
-    <button class="btn btn-outline-primary mb-2 mb-md-0" cdkStepperPrevious>
-        <i class="fa fa-angle-left"></i> Back to Delivery
-    </button>
-    <button class="btn btn-primary" (click)="createPaymentIntent()">
-        Go to Payment <i class="fa fa-angle-right"></i> 
-    </button>
-</div>

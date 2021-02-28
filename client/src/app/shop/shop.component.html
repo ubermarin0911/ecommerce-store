@@ -6,7 +6,7 @@
 
       <div class="row no-gutters">
         <div class="col-4 col-lg-12 px-1 px-lg-0">
-          <h5 class="text-success mt-lg-3 mb-lg-3">Sort</h5>
+          <h5 class="text-success mt-lg-3 mb-lg-3">Ordenar</h5>
         
           <select class="custom-select text-success mb-4" (change)="onSortSelected($event.target.value)">
             <option  *ngFor="let sort of sortOptions"
@@ -18,7 +18,7 @@
         </div>
         
         <div class="col-4 col-lg-12 px-1 px-lg-0">
-          <h5 class="text-success">Brands</h5>
+          <h5 class="text-success">Especies</h5>
           
           <button type="button" class="btn btn-outline-success btn-block mb-lg-3" (click)="isCollapsedBrands = !isCollapsedBrands"
             [attr.aria-expanded]="!isCollapsedBrands" aria-controls="collapseBrands">Especies
@@ -38,7 +38,7 @@
         </div>
 
         <div class="col-4 col-lg-12 px-1 px-lg-0">
-          <h5 class="text-success">Types</h5>
+          <h5 class="text-success">Tipos</h5>
 
           <button type="button" class="btn btn-outline-success btn-block mb-lg-3" (click)="isCollapsedTypes = !isCollapsedTypes"
             [attr.aria-expanded]="!isCollapsedTypes" aria-controls="collapseTypes">Tipos
@@ -74,9 +74,9 @@
         </div>
 
         <div class="col-12 col-lg-8 d-lg-flex justify-content-lg-end form-inline" *ngIf="products">
-          <input (keyup.enter)="onSearch()" type="text" class="form-control mr-1 mr-lg-2 search" #search placeholder="Search">
-          <button (click)="onSearch()" class="btn btn-outline-primary my-2">Search</button>
-          <button (click)="onReset()" class="btn btn-outline-success ml-1 ml-lg-2 my-2 px-1 px-xl-3">Reset</button>
+          <input (keyup.enter)="onSearch()" type="text" class="form-control mr-1 mr-lg-2 search" #search placeholder="Buscar...">
+          <button (click)="onSearch()" class="btn btn-outline-primary my-2">Buscar</button>
+          <button (click)="onReset()" class="btn btn-outline-success ml-1 ml-lg-2 my-2 px-1 px-xl-3">Borrar filtros</button>
         </div>
       </div>
       

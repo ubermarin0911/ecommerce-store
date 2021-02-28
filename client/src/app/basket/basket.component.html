@@ -1,6 +1,9 @@
 <div class="container mt-2">
-    <div *ngIf="(basket$ | async) === null">
-        <p>There are no items in your basket</p>
+    <div *ngIf="(basket$ | async) === null" class="empty-basket">
+        <p>Aún no hay productos en tu carrito.</p>
+        <button routerLink="/shop" class="btn btn-primary btn-lg">Mira nuestros productos 
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        </button>
     </div>
 
     <div *ngIf="basket$ | async">
@@ -14,7 +17,6 @@
                             (remove)="removeBasketItem($event)"
                             [items]="(basket$ | async).items">
                         </app-basket-summary>
-                        
                     </div>
                 </div>
 
@@ -27,7 +29,7 @@
                             [total]="(basketTotals$ | async).total">
                         </app-order-totals>
                         <a routerLink="/checkout" class="btn btn-outline-primary py-2 btn-block">
-                            Proceed to checkout
+                            Confirmar pedido
                         </a>
                     </div>
                 </div>

@@ -22,8 +22,8 @@
     min-width: 25px;
     border-radius: 50%;
     font-size: 1em;
-    background: blue;
-    color: white;
+    background: var(--main-color);
+    color: var(--white-color);
     text-align: center;
     top: 2px;
     right:-8px;
@@ -168,27 +168,27 @@
             margin: 5px 0;
         }
         
-        .button a {
-            background: #0080ff;
-            border: 1px royalblue solid;
-        }
+        .button {
+            & a{
+                background: var(--main-color);
+                border: 1px var(--hover-color) solid;
+            }
 
-        .button.secondary {
-            border: 0;
-        }
+            &.secondary a:hover{
+                background: var(--main-color);
+            }
 
-        .button.secondary a {
-            background: transparent;
-            border: 1px #0080ff solid;
-        }
+            &.secondary a{
+                background: transparent;
+                border: 1px var(--hover-color) solid;
+            }
 
-        .button a:hover {
-            text-decoration: none;
-        }
-
-        .button:not(.secondary) a:hover {
-            background: royalblue;
-            border-color: darkblue;
+            &.secondary{
+                border: 0;
+            }
+            & a:hover{
+                text-decoration: none;
+            }
         }
     }
 

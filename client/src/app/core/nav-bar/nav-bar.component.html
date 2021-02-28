@@ -10,9 +10,8 @@
     <div class="container-nav" (click)="closeMenu()">
       <li *ngIf="(currentUser$ | async)" #item class="item link account"><a routerLink="/orders" routerLinkActive="active">Pedidos</a></li>
       <li #item class="item link"><a [routerLink]="[ '/' ]" routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: true}">Home</a></li>
-      <li #item class="item link"><a [routerLink]="[ '/shop' ]" routerLinkActive="active">Shop</a></li>
-      <li #item class="item link"><a routerLink="/test-errors" routerLinkActive="active">Errors</a></li>
+        [routerLinkActiveOptions]="{exact: true}">Inicio</a></li>
+      <li #item class="item link"><a [routerLink]="[ '/shop' ]" routerLinkActive="active">Tienda</a></li>
       <li *ngIf="(currentUser$ | async)" #item class="item link account"><a (click)="logout()" routerLinkActive="active">Cerrar sesión</a></li>
     </div>
 
@@ -31,7 +30,7 @@
       <ng-container *ngIf="(currentUser$ | async) as currentUser">
         <div class="dropdown ml-3 mr-5" dropdown>
           <a class="dropdown-toggle" style="cursor: pointer;" dropdownToggle>
-            <strong>Welcome {{ currentUser.displayName }}</strong>
+            <strong>Bienvenido(a) {{ currentUser.displayName }}</strong>
           </a>
           <div class="dropdown-menu dropdown-menu-right" style="cursor: pointer;" *dropdownMenu>
             <a routerLink="/basket" class="dropdown-item d-flex align-items-center py-2">
