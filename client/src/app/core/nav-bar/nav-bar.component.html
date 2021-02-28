@@ -1,5 +1,4 @@
-
-<nav >
+<nav>
   <ul class="menu" [class.active]="menuActive">
     <div class="container-nav">
       <li class="logo" (click)="closeMenu()">
@@ -23,8 +22,8 @@
         </a>
       </li>
       <ng-container *ngIf="!(currentUser$ | async)">
-        <li #item class="item button"><a routerLink="/account/login">Iniciar sesión</a></li>
-        <li #item class="item button secondary"><a routerLink="/account/register">Registrar</a></li>
+        <li #item class="item button"><a routerLink="/account/login">Inicia sesión</a></li>
+        <li #item class="item button secondary"><a routerLink="/account/register">Crea tu cuenta</a></li>
       </ng-container>
 
       <ng-container *ngIf="(currentUser$ | async) as currentUser">
