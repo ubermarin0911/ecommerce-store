@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../account.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,6 +11,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   returnUrl: string;
+
+  @Input() btClass = "col-12 col-sm-8 col-md-6 col-xl-4";
 
   constructor(private accountService: AccountService, 
     private router: Router, 

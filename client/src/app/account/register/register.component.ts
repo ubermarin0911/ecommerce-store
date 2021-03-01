@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../account.service';
 import { Router } from '@angular/router';
@@ -14,6 +14,8 @@ import { map, switchMap } from 'rxjs/operators';
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   errors: string[];
+
+  @Input() btClass = "col-12 col-sm-8 col-md-6 col-xl-4";
 
   constructor(private fb: FormBuilder, 
     private accountService: AccountService,
