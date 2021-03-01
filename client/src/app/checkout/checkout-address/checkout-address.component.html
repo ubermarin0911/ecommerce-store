@@ -23,23 +23,17 @@
         </ng-container>
     </div>
     <div class="row" formGroupName="addressForm">
-        <div class="form-group col-6">
-            <app-text-input [label]="'Nombres'" formControlName="firstName"></app-text-input>
+        <div class="form-group col-12">
+            <app-text-input [label]="'Nombres'" formControlName="name"></app-text-input>
         </div>
-        <div class="form-group col-6">
-            <app-text-input [label]="'Apellidos'" formControlName="lastName"></app-text-input>
-        </div>
-        <div class="form-group col-6">
-            <app-text-input [label]="'Dirección'" formControlName="street"></app-text-input>
+        <div class="form-group col-12">
+            <app-text-input [label]="'Dirección'" formControlName="userAddress"></app-text-input>
         </div>
         <div class="form-group col-6">
             <app-text-input [label]="'Ciudad'" formControlName="city"></app-text-input>
         </div>
         <div class="form-group col-6">
-            <app-text-input [label]="'Departamento'" formControlName="state"></app-text-input>
-        </div>
-        <div class="form-group col-6">
-            <app-text-input [label]="'Código postal'" formControlName="zipCode"></app-text-input>
+            <app-text-input [label]="'Celular'" formControlName="phoneNumber"></app-text-input>
         </div>
     </div>
 </div>
