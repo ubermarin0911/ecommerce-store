@@ -6,6 +6,7 @@
     --hover-color: #4bd8a2;
     --white-color: #ffffff;
     --main-hover-color: #1a252f93;
+    --background-color-gray: #f7f7f7;
   }
 
 .xng-breadcrumb-root {
@@ -35,4 +36,8 @@ app-root{
 
 app-footer{
     margin-top: auto;
+}
+
+.ng-image-slider .img-div{
+    cursor: pointer;
 }

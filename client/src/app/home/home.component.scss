@@ -1,10 +1,59 @@
-.featured{
-    height: 250px;
-
-}
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap');
 
 img{
     object-fit: cover;
     height: 600px;
     width: 100%;
+}
+
+.featured{
+
+    & p{
+        font-family: 'Lato', sans-serif;
+        margin: 1em 0;
+        max-width: 40em;
+        font-size: 30px;
+        text-align: center;
+    }
+}
+
+.module {
+    background: 
+        linear-gradient(
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+        ),
+        url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/skyscrapers.jpg);
+    background-size: cover;
+    width: 100%;
+    height: 350px;
+    position: relative;
+}
+
+.lr span{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    margin: 0;
+
+    & h2{
+        font-size: 30px;
+    }
+
+    & p{
+        font-size: 20px;
+    }
+}
+
+.benefit-description{
+    background: var(--background-color-gray);
+}
+
+.description{
+    text-align: center;
+    & p{
+        font-family: 'Lato', sans-serif;
+        font-size: 20px;
+    }
 }

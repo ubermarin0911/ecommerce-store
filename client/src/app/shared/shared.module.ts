@@ -15,6 +15,7 @@ import { BasketSummaryComponent } from './components/basket-summary/basket-summa
 import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
+import { NgImageSliderModule } from 'ng-image-slider';
 
 @NgModule({
   declarations: [PagingHeaderComponent, 
@@ -35,7 +36,8 @@ import { ImageGalleryComponent } from './components/image-gallery/image-gallery.
     FormsModule,
     CdkStepperModule,
     RouterModule,
-    NgxGalleryModule 
+    NgxGalleryModule,
+    NgImageSliderModule
   ],
   exports:[
     PaginationModule,
@@ -52,7 +54,8 @@ import { ImageGalleryComponent } from './components/image-gallery/image-gallery.
     StepperComponent,
     BasketSummaryComponent,
     NgxGalleryModule,
-    ImageGalleryComponent
+    ImageGalleryComponent,
+    NgImageSliderModule
   ],
 })
 export class SharedModule { }

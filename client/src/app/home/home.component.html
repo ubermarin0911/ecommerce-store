@@ -1,18 +1,108 @@
 <carousel>
 
   <slide>
-    <img src="assets/images/hero1.jpg" alt="First slide" style="display: block; width: 100%;">
+    <img src="assets/images/inicio1.jpg" alt="Plantas Pido" style="display: block; width: 100%;">
   </slide>
   <slide>
-    <img src="assets/images/hero2.jpg" alt="First slide" style="display: block; width: 100%;">
+    <img src="assets/images/inicio2.jpg" alt="Plantas Pido" style="display: block; width: 100%;">
   </slide>
   <slide>
-    <img src="assets/images/hero3.jpg" alt="First slide" style="display: block; width: 100%;">
+    <img src="assets/images/inicio3.jpg" alt="Plantas Pido" style="display: block; width: 100%;">
   </slide>
 </carousel>
 
 <section class="featured">
-  <div class="d-flex justify-content-center pt-4">
-    <h1>Bienvenido a Plantas Pido</h1>
+  <div class="d-flex flex-column align-items-center pt-4">
+    <h1 class="text-center">Bienvenido a Plantas Pido</h1>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illo necessitatibus, molestiae rem incidunt expedita a laudantium voluptate atque iure tempore officia mollitia amet perspiciatis sit? Facilis, sequi illum? Mollitia, minima?</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <div class="module lr">
+        <span>
+          <h2><strong>Skyscrapers</strong></h2>
+          <p>Skyscrapers sometimes have nicknames like jim or shim.</p>
+          <button class="btn btn-lg btn-info">Ir a comprar</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4 mt-3 mt-lg-0">
+      <div class="module lr">
+        <span>
+          <h2><strong>Skyscrapers</strong></h2>
+          <p>Skyscrapers sometimes have nicknames like jim or shim.</p>
+          <button class="btn btn-lg btn-info">Ir a comprar</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4 mt-3">
+      <div class="module lr">
+        <span>
+          <h2><strong>Skyscrapers</strong></h2>
+          <p>Skyscrapers sometimes have nicknames like jim or shim.</p>
+          <button class="btn btn-lg btn-info">Ir a comprar</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4 mt-3">
+      <div class="module lr">
+        <span>
+          <h2><strong>Skyscrapers</strong></h2>
+          <p>Skyscrapers sometimes have nicknames like jim or shim.</p>
+          <button class="btn btn-lg btn-info">Ir a comprar</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4 mt-3">
+      <div class="module lr">
+        <span>
+          <h2><strong>Skyscrapers</strong></h2>
+          <p>Skyscrapers sometimes have nicknames like jim or shim.</p>
+          <button class="btn btn-lg btn-info">Ir a comprar</button>
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<section class="container-fluid mt-3 benefit-description">
+  <div class="row py-5">
+    <div class="col-lg-3">
+      <img src="assets/images/hojas2.png" alt="" class="img-fluid d-none d-lg-block" style="height: auto;">
+    </div>
+    <div class="col-12 col-lg-6 description">
+      <h2>Lorem ipsum</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque aliquid nisi sequi animi corrupti dolor, dolores corporis nam perspiciatis. Molestias necessitatibus doloribus ad dignissimos rem ullam provident ducimus nostrum distinctio.</p>
+    </div>
+    <div class="col-lg-3">
+      <img src="assets/images/hojas1.png" alt="" class="img-fluid d-none d-lg-block" style="height: auto;">
+    </div>
+  </div>
+</section>
+
+<section class="container">
+  <div class="row">
+    <div class="col-12">
+
+      <h2 class="text-center my-4">Plantas destacadas</h2>
+
+      <ng-image-slider 
+        [images]="imageObject" 
+        [imageSize]="{width: '350px', height: '250px', space: 4}"
+        [infinite]="true" 
+        [imagePopup]="false"
+        [autoSlide]="3"
+        (imageClick)="openProduct($event)"
+        #nav>
+      </ng-image-slider>
+    </div>
   </div>
 </section>
