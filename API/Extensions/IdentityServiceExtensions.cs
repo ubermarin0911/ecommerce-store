@@ -16,9 +16,18 @@ namespace API.Extensions
         {
             var builder = services.AddIdentityCore<AppUser>();
 
+
             builder = new IdentityBuilder(builder.UserType, builder.Services);
             builder.AddEntityFrameworkStores<AppIdentityDbContext>();
             builder.AddSignInManager<SignInManager<AppUser>>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequiredLength = 4;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

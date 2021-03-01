@@ -101,15 +101,22 @@ namespace API.Controllers
             {
                 return new BadRequestObjectResult(new ApiValidationErrorResponse
                 {
-                    Errors = new[] { "Email address is in use" }
+                    Errors = new[] { "Correo electrónico ya se encuentra registrado" }
                 });
             }
 
             var user = new AppUser
             {
-                DisplayName = registerDto.DisplayName,
+                DisplayName = registerDto.Name,
                 Email = registerDto.Email,
-                UserName = registerDto.Email
+                UserName = registerDto.Email,
+                Address = new Address
+                {
+                    Name = registerDto.Name,
+                    UserAddress = registerDto.UserAddress,
+                    City = registerDto.City,
+                    PhoneNumber = registerDto.PhoneNumber
+                }
             };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
@@ -121,9 +128,6 @@ namespace API.Controllers
                 Token = _tokenService.CreateToken(user),
                 Email = user.Email
             };
-
         }
-
-
     }
 }

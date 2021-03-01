@@ -29,19 +29,13 @@ namespace Infrastructure.Identity.Migrations
                     b.Property<string>("City")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("State")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ZipCode")
+                    b.Property<string>("UserAddress")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

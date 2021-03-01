@@ -18,12 +18,10 @@ namespace Infrastructure.Identity
                     UserName = "bob@test.com",
                     Address = new Address
                     {
-                        FirstName = "Bob",
-                        LastName = "Bobbity",
-                        Street = "10 The Street",
-                        City = "New york",
-                        State = "NY",
-                        ZipCode = "90210"
+                        Name = "Bob",
+                        UserAddress = "10 The Street",
+                        City = "Santa Marta",
+                        PhoneNumber = "111111111",
                     }
                 };
 
