@@ -1,14 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Entities;
 using Core.Entities.OrderAggregate;
+using Core.Entities.Payment;
 using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.Extensions.Configuration;
 using Stripe;
 using Order = Core.Entities.OrderAggregate.Order;
 using Product = Core.Entities.Product;
+using Newtonsoft.Json;
+using System;
 
 namespace Infrastructure.Services
 {
@@ -24,6 +31,60 @@ namespace Infrastructure.Services
             _config = config;
             _unitOfWork = unitOfWork;
             _basketRepository = basketRepository;
+        }
+
+        public async Task<DataMerchant> GetMerchantAsync()
+        {
+            var url = _config["Wompi:Url"];
+            var publicKey = _config["Wompi:PublicKey"];
+
+            DataMerchant dataMerchant = null;
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync($"{url}merchants/{publicKey}"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    dataMerchant = JsonConvert.DeserializeObject<DataMerchant>(apiResponse);
+                }
+            }
+
+            return dataMerchant;
+        }
+
+        public async Task CreateTransactionAsync(Transaction transaction)
+        {
+            var url = _config["Wompi:Url"];
+            var publicKey = _config["Wompi:PublicKey"];
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", publicKey);
+
+                var transactionJson = await Task.FromResult(JsonConvert.SerializeObject(transaction));
+
+                var httpContent = new StringContent(transactionJson, Encoding.UTF8, "application/json");
+
+                var httpResponse = await httpClient.PostAsync($"{url}transactions", httpContent);
+
+                if (httpResponse.Content != null)
+                {
+                    var responseContent = await httpResponse.Content.ReadAsStringAsync();
+                    // From here on you could deserialize the ResponseContent back again to a concrete C# type using Json.Net
+                }
+            }
+        }
+
+        public async Task<string> GenerateReferenceOrderAsync()
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            const int lenght = 30;
+
+            var randomString = new string(Enumerable.Repeat(chars, lenght)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return randomString;
         }
 
         public async Task<CustomerBasket> CreateOrUpdatePaymentIntent(string basketId)
@@ -87,7 +148,7 @@ namespace Infrastructure.Services
 
         public async Task<Order> UpdateOrderPaymentFailed(string paymentIntentId)
         {
-            var spec = new OrderByPaymentIntentIdSpecification(paymentIntentId);
+            var spec = new OrderByReferenceSpecification(paymentIntentId);
             var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
 
             if (order == null) return null;
@@ -100,7 +161,7 @@ namespace Infrastructure.Services
 
         public async Task<Order> UpdateOrderPaymentSucceeded(string paymentIntentId)
         {
-            var spec = new OrderByPaymentIntentIdSpecification(paymentIntentId);
+            var spec = new OrderByReferenceSpecification(paymentIntentId);
             var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
 
             if (order == null) return null;

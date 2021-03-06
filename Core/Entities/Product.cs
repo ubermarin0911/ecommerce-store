@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Core.Entities
 {
     public class Product : BaseEntity
@@ -10,6 +12,11 @@ namespace Core.Entities
         public int ProductTypeId { get; set; }
         public ProductBrand ProductBrand { get; set; }
         public int ProductBrandId { get; set; }
+    }
 
+    public class ProductData
+    {
+        public IReadOnlyList<Product> Products { get; set; }
+        public int TotalItems { get; set; }
     }
 }

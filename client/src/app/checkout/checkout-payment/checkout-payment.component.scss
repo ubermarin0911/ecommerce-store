@@ -1,0 +1,25 @@
+.payment-method{
+    height: 84px;
+    border: 1px var(--secondary-opaque-color) solid;
+    border-radius: .25rem;
+    cursor: pointer;
+    user-select: none;
+    transition: box-shadow 100ms ease-out 100ms;
+    transition: border 100ms ease-out 100ms;
+
+    &:hover{
+        border: 1px var(--secondary-color) solid;
+        box-shadow:  2px 2px 15px 2px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.credit-card{
+    display: flex;
+    justify-content: center;
+}
+
+.wrapper-image-payment-method{
+    width: 118px;
+    display: flex;
+    justify-content: center;
+}

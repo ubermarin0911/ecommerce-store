@@ -8,15 +8,27 @@ import { CheckoutDeliveryComponent } from './checkout-delivery/checkout-delivery
 import { CheckoutReviewComponent } from './checkout-review/checkout-review.component';
 import { CheckoutPaymentComponent } from './checkout-payment/checkout-payment.component';
 import { CheckoutSuccessComponent } from './checkout-success/checkout-success.component';
-
-
+import { PaymentCreditCardComponent } from './payment-methods/payment-credit-card/payment-credit-card.component';
+import { PaymentNequiComponent } from './payment-methods/payment-nequi/payment-nequi.component';
+import { PaymentPseComponent } from './payment-methods/payment-pse/payment-pse.component';
+import { PaymentBancolombiaComponent } from './payment-methods/payment-bancolombia/payment-bancolombia.component';
 
 @NgModule({
-  declarations: [CheckoutComponent, CheckoutAddressComponent, CheckoutDeliveryComponent, CheckoutReviewComponent, CheckoutPaymentComponent, CheckoutSuccessComponent],
+  declarations: [CheckoutComponent, 
+    CheckoutAddressComponent, 
+    CheckoutDeliveryComponent, 
+    CheckoutReviewComponent, 
+    CheckoutPaymentComponent, 
+    CheckoutSuccessComponent,
+    PaymentCreditCardComponent,
+    PaymentNequiComponent,
+    PaymentPseComponent,
+    PaymentBancolombiaComponent,
+  ],
   imports: [
     CommonModule,
     CheckoutRoutingModule,
-    SharedModule
+    SharedModule,
   ]
 })
 export class CheckoutModule { }

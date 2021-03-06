@@ -13,7 +13,25 @@
                     <app-checkout-review [appStepper]="appStepper"></app-checkout-review>
                 </cdk-step>
                 <cdk-step [label]="'Pago'">
-                    <app-checkout-payment [checkoutForm]="checkoutForm"></app-checkout-payment>
+                    <app-checkout-payment (paymentMethodSelected)="onPaymentMethodSelected($event)" [appStepper]="appStepper" [totalPriceOrder]="(basketTotals$ | async).total" [checkoutForm]="checkoutForm"></app-checkout-payment>
+                </cdk-step>
+
+                <cdk-step [label]="'MetodoPago'">
+                    <ng-container *ngIf="paymentMethodSelected === 'CARD'">
+                        <app-payment-credit-card [appStepper]="appStepper"></app-payment-credit-card>
+                    </ng-container>
+
+                    <ng-container *ngIf="paymentMethodSelected === 'BANCOLOMBIA_TRANSFER'">
+                        <app-payment-bancolombia [appStepper]="appStepper"></app-payment-bancolombia>
+                    </ng-container>
+
+                    <ng-container *ngIf="paymentMethodSelected === 'NEQUI'">
+                        <app-payment-nequi [appStepper]="appStepper"></app-payment-nequi>
+                    </ng-container>
+
+                    <ng-container *ngIf="paymentMethodSelected === 'PSE'">
+                        <app-payment-pse [appStepper]="appStepper"></app-payment-pse>
+                    </ng-container>
                 </cdk-step>
             </app-stepper>
         </div>

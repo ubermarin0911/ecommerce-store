@@ -54,7 +54,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("OrderDate")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("PaymentIntentId")
+                    b.Property<string>("Reference")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")

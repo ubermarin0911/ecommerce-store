@@ -1,0 +1,43 @@
+<div class="float-none d-flex justify-content-between flex-column flex-lg-row mt-4">
+    <button class="btn btn-outline-primary mb-2 mb-md-0" cdkStepperPrevious>
+        <i class="fa fa-angle-left"></i> Regresar
+    </button>
+</div>
+
+<form [formGroup]="creditCardForm" (ngSubmit)="onSubmitTransaction()">
+    <div class="container p-0">
+        <div class="row mt-3">
+            <div class="col-6">
+                <app-text-input class="card-number" formControlName="cardNumber" [label]="'Número de la tarjeta'"></app-text-input>
+            </div>
+            <div class="col-6">
+                <app-text-input formControlName="card_holder" [label]="'Nombre en la tarjeta'"></app-text-input>
+            </div>
+            <div class="col-3">
+                <app-text-input formControlName="exp_month" [label]="'Mes'"></app-text-input>
+            </div>
+            <div class="col-4">
+                <app-text-input formControlName="exp_year" [label]="'Año'"></app-text-input>
+            </div>
+            <div class="col-5">
+                <app-text-input formControlName="cvc" [label]="'CVC'"></app-text-input>
+            </div>
+            <div class="form-inline col-8 col-lg-4 ">
+              <span>Pagar en <input type="number" class="form-control mx-3" value="1" min="1" max="36" ><strong>Cuota</strong> </span>
+            </div>
+
+            <div class="col-12 col-lg-8">
+                <label for="acceptance">
+                    <input id="acceptance" type="checkbox" class="mr-2">
+                    <span >Acepto haber leído los <a target="_blank" href="https://wompi.co/wp-content/uploads/2019/09/TERMINOS-Y-CONDICIONES-DE-USO-USUARIOS-WOMPI.pdf">Términos y Condiciones y la Política de Privacidad
+                    </a> para hacer este pago.
+                    </span>
+                </label>
+            </div>
+
+            <div class="d-flex justify-content-center w-100">
+                <button type="submit" class="btn btn-primary px-5 my-3">Pagar</button>
+            </div>
+        </div>
+    </div>
+</form>

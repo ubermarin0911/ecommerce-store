@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20210301192331_InitialCreate")]
+    [Migration("20210305185338_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("OrderDate")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("PaymentIntentId")
+                    b.Property<string>("Reference")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountService } from '../account/account.service';
 import { BasketService } from '../basket/basket.service';
@@ -13,6 +13,7 @@ import { IBasketTotals } from '../shared/models/basket';
 export class CheckoutComponent implements OnInit {
   basketTotals$: Observable<IBasketTotals>;
   checkoutForm: FormGroup;
+  paymentMethodSelected: string;
 
   constructor(
     private fb: FormBuilder, 
@@ -60,6 +61,11 @@ export class CheckoutComponent implements OnInit {
         basket.deliveryMethodId.toString()
       );
     }
+  }
+
+  onPaymentMethodSelected(paymentMethod: string){
+    // console.log(paymentMethod);
+    this.paymentMethodSelected = paymentMethod;
   }
 
 }

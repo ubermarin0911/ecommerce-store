@@ -63,7 +63,7 @@ namespace Infrastructure.Data.Migrations
                     DeliveryMethodId = table.Column<int>(nullable: true),
                     Subtotal = table.Column<double>(nullable: false),
                     Status = table.Column<string>(nullable: false),
-                    PaymentIntentId = table.Column<string>(nullable: true)
+                    Reference = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

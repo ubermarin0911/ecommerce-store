@@ -12,7 +12,6 @@ namespace API.Dtos
         public string Email { get; set; }
 
         [Required]
-        [StringLength(4, ErrorMessage = "La contraseña debe tener más de 4 caracteres.")]
         public string Password { get; set; }
 
         [Required]
