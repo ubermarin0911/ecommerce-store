@@ -1,4 +1,14 @@
+import { IAddress } from "./address";
+
 export interface ITransaction {
+    id?: string;
+    created_at?: string;
+    status?: string;
+    payment_method_type?: string;
+    payment_link_id?: any;
+    basketId?: string;
+    shipToAddress?: IAddress;
+    
     acceptance_token: string;
     amount_in_cents: number;
     currency: string;
@@ -11,14 +21,10 @@ export interface ITransaction {
 }
   
 export interface IShippingAddress {
-    address_line_1: string;
-    address_line_2: string;
-    country: string;
-    region: string;
-    city: string;
-    name: string;
-    phone_number: string;
-    postal_code: string;
+    address_line_1?: string;
+    city?: string;
+    name?: string;
+    phone_number?: string;
 }
   
 export interface ICustomerData {
@@ -39,6 +45,9 @@ export class Transaction implements ITransaction{
     currency: string = "";
     customer_email: string = "";
     reference: string = "";
+
+    basketId: string = "";
+
     payment_method: IPaymentMethod;
     shipping_address: IShippingAddress;
     customer_data: ICustomerData;
@@ -64,12 +73,8 @@ export class CustomerData implements ICustomerData{
 
 export class ShippingAddress implements IShippingAddress{
     address_line_1: string = "";
-    address_line_2: string = "";
-    country: string = "";
-    region: string = "";
     city: string = "";
     name: string = "";
     phone_number: string = "";
-    postal_code: string = "";
 
 }

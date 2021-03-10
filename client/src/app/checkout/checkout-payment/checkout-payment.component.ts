@@ -42,27 +42,8 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy {
   
   }
 
-  async submitOrder(){
-    this.loading = true;
-    const basket = this.basketService.getCurrentBasketValue();
-  } 
-
-  private async createOrder(basket: IBasket) {
-    const orderToCreate = this.getOrderToCreate(basket);
-
-    return this.checkoutService.createOrder(orderToCreate).toPromise();
-  }
-
   private generateReferenceOrder(){
     
-  }
-
-  private getOrderToCreate(basket: IBasket) {
-    return {
-       basketId: basket.id,
-       deliveryMethodId: +this.checkoutForm.get('deliveryForm').get('deliveryMethod').value,
-       shipToAddress: this.checkoutForm.get('addressForm').value
-    };
   }
 
   openCheckout(){

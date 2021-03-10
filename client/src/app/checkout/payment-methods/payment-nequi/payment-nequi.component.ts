@@ -1,5 +1,10 @@
 import { CdkStepper } from '@angular/cdk/stepper';
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { BasketService } from 'src/app/basket/basket.service';
+import { PaymentMethod } from 'src/app/shared/enums/paymentMethods';
+import { Transaction } from 'src/app/shared/models/transaction';
+import { CheckoutService } from '../../checkout.service';
 
 @Component({
   selector: 'app-payment-nequi',
@@ -7,12 +12,50 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./payment-nequi.component.scss']
 })
 export class PaymentNequiComponent implements OnInit {
-
+  @Input() checkoutForm: FormGroup;
   @Input() appStepper: CdkStepper;
 
-  constructor() { }
+  nequiForm: FormGroup;
+  transaction: Transaction = new Transaction();
+
+  constructor(private basketService: BasketService,
+    private checkoutService: CheckoutService) { }
 
   ngOnInit(): void {
+    this.createNequiForm();
   }
+
+  createNequiForm(){
+    this.nequiForm = new FormGroup({
+      phoneNumber: new FormControl('', Validators.required),
+    });
+  }
+  
+  async submitOrder(){
+    // this.loading = true;
+    const paymentMethod = PaymentMethod;
+
+    const basket = this.basketService.getCurrentBasketValue();
+    this.transaction.payment_method.type = paymentMethod.Nequi;
+    this.transaction.payment_method.phone_number = this.nequiForm.controls["phoneNumber"].value;
+    
+    try {
+      const createdOrder = await this.checkoutService.createOrderTransaction(basket,
+        this.checkoutForm, this.transaction);
+      console.log(createdOrder);
+      // const paymentResult = await this.confirmPaymentWithStripe(basket);
+      // if (paymentResult.paymentIntent) {
+      //   this.basketService.deleteLocalBasket(basket.id);
+      //   const navigationExtras: NavigationExtras = { state: createdOrder };
+      //   this.router.navigate(['checkout/success'], navigationExtras);
+      // } else {
+      //   this.toastr.error(paymentResult.error.message);
+      // }
+      // this.loading = false;
+    } catch (error) {
+      console.log(error);
+    }
+  } 
+
 
 }

@@ -30,10 +30,10 @@ export class CheckoutComponent implements OnInit {
   createCheckoutForm() {
     this.checkoutForm = this.fb.group({
       addressForm: this.fb.group({
+        address_line_1: [null, Validators.required],
         name: [null, Validators.required],
-        userAddress: [null, Validators.required],
         city: [null, Validators.required],
-        phoneNumber: [null, Validators.required],
+        phone_number: [null, Validators.required],
       }),
       deliveryForm: this.fb.group({
         deliveryMethod: [null, Validators.required]
@@ -56,11 +56,11 @@ export class CheckoutComponent implements OnInit {
 
   getDeliveryMethodValue(){
     const basket = this.basketService.getCurrentBasketValue();
-    if(basket.deliveryMethodId !== null){
-      this.checkoutForm.get('deliveryForm').get('deliveryMethod').patchValue(
-        basket.deliveryMethodId.toString()
-      );
-    }
+    // if(basket.deliveryMethodId !== null){
+    //   this.checkoutForm.get('deliveryForm').get('deliveryMethod').patchValue(
+    //     basket.deliveryMethodId.toString()
+    //   );
+    // }
   }
 
   onPaymentMethodSelected(paymentMethod: string){

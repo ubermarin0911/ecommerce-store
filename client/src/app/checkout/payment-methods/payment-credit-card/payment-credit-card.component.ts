@@ -1,10 +1,12 @@
 import { CdkStepper } from '@angular/cdk/stepper';
 import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { IPresignedAcceptance } from 'src/app/shared/models/merchant';
+import { ToastrService } from 'ngx-toastr';
+import { BasketService } from 'src/app/basket/basket.service';
+import { IBasket } from 'src/app/shared/models/basket';
 import { Transaction } from 'src/app/shared/models/transaction';
 import { CheckoutService } from '../../checkout.service';
+import { PaymentMethod } from '../../../shared/enums/paymentMethods';
 
 var valid = require("card-validator");
 
@@ -16,19 +18,18 @@ var valid = require("card-validator");
 
 export class PaymentCreditCardComponent implements OnInit {
   @Input() appStepper: CdkStepper;
+  @Input() checkoutForm: FormGroup;
 
   creditCardForm: FormGroup;
   
-  acceptanceToken$: Observable<IPresignedAcceptance>;
-
   transaction: Transaction = new Transaction();
 
-  constructor(private checkoutService: CheckoutService) { }
+  constructor(private checkoutService: CheckoutService,
+    private toastr: ToastrService, 
+    private basketService: BasketService) { }
 
   ngOnInit(): void {
-    this.acceptanceToken$ = this.checkoutService.acceptanceToken$;
 
-    this.getAcceptanceToken();
     this.createCreditCardForm();
 
     var numberValidation = valid.number("30569309025904");
@@ -42,20 +43,6 @@ export class PaymentCreditCardComponent implements OnInit {
     }
   }
 
-  getAcceptanceToken(){
-    this.acceptanceToken$.subscribe((presignedAcceptance)=> {
-      this.transaction.acceptance_token = presignedAcceptance.acceptance_token;
-      console.log(this.transaction);
-      
-    }, error => {
-      console.log(error);
-    });
-  }
-
-  generateReference(){
-    
-  }
-
   createCreditCardForm(){
     this.creditCardForm = new FormGroup({
       cardNumber: new FormControl('', Validators.required),
@@ -67,19 +54,8 @@ export class PaymentCreditCardComponent implements OnInit {
     });
   }
 
-  onSubmitTransaction(){
-    this.transaction.amount_in_cents = 17500000;
-    this.transaction.currency = "COP";
-    this.transaction.customer_email = "user@example.com";
-    this.transaction.reference = "ad2sd3ddsdsd2asa";
-    this.transaction.payment_method.type = "NEQUI";
-    this.transaction.payment_method.phone_number = "3991111111";
+  async submitOrder(){
 
-    this.checkoutService.createTransaction(this.transaction).subscribe((data) => {
-
-    }, error => {
-
-    });
-  }
+  } 
 
 }

@@ -18,19 +18,19 @@
 
                 <cdk-step [label]="'MetodoPago'">
                     <ng-container *ngIf="paymentMethodSelected === 'CARD'">
-                        <app-payment-credit-card [appStepper]="appStepper"></app-payment-credit-card>
+                        <app-payment-credit-card [checkoutForm]="checkoutForm" [appStepper]="appStepper"></app-payment-credit-card>
                     </ng-container>
 
                     <ng-container *ngIf="paymentMethodSelected === 'BANCOLOMBIA_TRANSFER'">
-                        <app-payment-bancolombia [appStepper]="appStepper"></app-payment-bancolombia>
+                        <app-payment-bancolombia [checkoutForm]="checkoutForm" [appStepper]="appStepper"></app-payment-bancolombia>
                     </ng-container>
 
                     <ng-container *ngIf="paymentMethodSelected === 'NEQUI'">
-                        <app-payment-nequi [appStepper]="appStepper"></app-payment-nequi>
+                        <app-payment-nequi [checkoutForm]="checkoutForm" [appStepper]="appStepper"></app-payment-nequi>
                     </ng-container>
 
                     <ng-container *ngIf="paymentMethodSelected === 'PSE'">
-                        <app-payment-pse [appStepper]="appStepper"></app-payment-pse>
+                        <app-payment-pse [checkoutForm]="checkoutForm" [appStepper]="appStepper"></app-payment-pse>
                     </ng-container>
                 </cdk-step>
             </app-stepper>

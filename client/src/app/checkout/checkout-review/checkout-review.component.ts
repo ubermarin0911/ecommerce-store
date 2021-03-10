@@ -24,23 +24,6 @@ export class CheckoutReviewComponent implements OnInit {
     this.basket$ = this.basketService.basket$;
   }
 
-  generatePresignedAcceptance(){
-    return this.checkoutService.generatePresignedAcceptance().subscribe((response: any) => {
-      this.appStepper.next();
-    }, error => {
-      console.log(error);
-    })
-  }
 
-  createPaymentIntent(){
-    this.appStepper.next();
-    return this.basketService.createPaymentIntent().subscribe((response: any) => {
-      this.toastr.success('Payment intent created');
-      // this.appStepper.next();
-    }, error => {
-      console.log(error);
-      
-    });
-  }
 
 }

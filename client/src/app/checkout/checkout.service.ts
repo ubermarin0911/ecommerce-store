@@ -8,6 +8,8 @@ import { BehaviorSubject } from 'rxjs';
 import { public_key } from 'wompi_keys/public_key';
 import { IDataMerchant, IMerchant, IPresignedAcceptance } from '../shared/models/merchant';
 import { Transaction } from '../shared/models/transaction';
+import { IBasket } from '../shared/models/basket';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -15,21 +17,10 @@ import { Transaction } from '../shared/models/transaction';
 export class CheckoutService {
   baseUrl = environment.apiUrl;
 
-  private acceptanceTokenSource = new BehaviorSubject<IPresignedAcceptance>(null);
-  acceptanceToken$ = this.acceptanceTokenSource.asObservable();
-
   private referenceOrderSource = new BehaviorSubject<string>(null);
   referenceOrder$ = this.referenceOrderSource.asObservable();
 
   constructor(private http: HttpClient) { }
-
-  generatePresignedAcceptance(){
-    return this.http.get(`${this.baseUrl}payments/presignedAcceptance`).pipe(
-      map((presignedAcceptance: IPresignedAcceptance) => {
-       this.acceptanceTokenSource.next(presignedAcceptance);
-      })
-    );
-  }
 
   createTransaction(transaction: Transaction){
     return this.http.post(`${this.baseUrl}payments/transaction`, transaction);
@@ -43,12 +34,8 @@ export class CheckoutService {
     );
   }
 
-  createOrder(order: IOrderToCreate){
-    return this.http.post(`${this.baseUrl}orders`,order);
-  }
-  
-  getCurrentAcceptanceTokenValue(){
-    return this.acceptanceTokenSource.value;
+  createOrder(transaction: Transaction){
+    return this.http.post(`${this.baseUrl}orders`, transaction);
   }
 
   getDeliveryMethods(){
@@ -57,6 +44,22 @@ export class CheckoutService {
         return dm.sort((a, b) => b.price - a.price);
       })
     );
+  }
+
+  async createOrderTransaction(basket: IBasket, checkoutForm: FormGroup, transaction: Transaction) {
+    const orderToCreate = this.getOrderToCreate(basket, checkoutForm);
+
+    transaction.basketId = orderToCreate.basketId;
+    transaction.shipping_address = orderToCreate.shipToAddress;
+
+    return this.createOrder(transaction).toPromise();
+  }
+
+  getOrderToCreate(basket: IBasket, checkoutForm: FormGroup) {
+    return {
+       basketId: basket.id,
+       shipToAddress: checkoutForm.get('addressForm').value
+    };
   }
 
 }

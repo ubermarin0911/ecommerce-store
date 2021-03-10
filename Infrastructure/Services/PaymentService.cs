@@ -13,9 +13,9 @@ using Core.Specifications;
 using Microsoft.Extensions.Configuration;
 using Stripe;
 using Order = Core.Entities.OrderAggregate.Order;
-using Product = Core.Entities.Product;
 using Newtonsoft.Json;
 using System;
+using Core.Entities.Payment.Response;
 
 namespace Infrastructure.Services
 {
@@ -25,8 +25,9 @@ namespace Infrastructure.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
 
-        public PaymentService(IBasketRepository basketRepository, IUnitOfWork unitOfWork,
-        IConfiguration config)
+        public PaymentService(IBasketRepository basketRepository,
+                              IUnitOfWork unitOfWork,
+                              IConfiguration config)
         {
             _config = config;
             _unitOfWork = unitOfWork;
@@ -52,10 +53,11 @@ namespace Infrastructure.Services
             return dataMerchant;
         }
 
-        public async Task CreateTransactionAsync(Transaction transaction)
+        public async Task<TransactionResponse> CreateTransactionAsync(Transaction transaction)
         {
             var url = _config["Wompi:Url"];
             var publicKey = _config["Wompi:PublicKey"];
+            TransactionResponse transactionResponse = null;
 
             using (var httpClient = new HttpClient())
             {
@@ -70,81 +72,93 @@ namespace Infrastructure.Services
                 if (httpResponse.Content != null)
                 {
                     var responseContent = await httpResponse.Content.ReadAsStringAsync();
-                    // From here on you could deserialize the ResponseContent back again to a concrete C# type using Json.Net
+                    transactionResponse = JsonConvert.DeserializeObject<TransactionResponse>(responseContent);
                 }
             }
+            return transactionResponse;
         }
 
         public async Task<string> GenerateReferenceOrderAsync()
         {
             Random random = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            const int lenght = 30;
+            const string validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            const int lenghtReference = 30;
 
-            var randomString = new string(Enumerable.Repeat(chars, lenght)
-            .Select(s => s[random.Next(s.Length)]).ToArray());
+            string randomReference;
+            Order orderByReference = null;
+            do
+            {
+                randomReference = new string(Enumerable.Repeat(validCharacters, lenghtReference)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
 
-            return randomString;
+                var spec = new OrderByReferenceSpecification(randomReference);
+
+                orderByReference = await _unitOfWork.Repository<Order>()
+                        .GetEntityWithSpec(spec);
+
+            } while (orderByReference != null);
+
+            return randomReference;
         }
 
-        public async Task<CustomerBasket> CreateOrUpdatePaymentIntent(string basketId)
-        {
-            StripeConfiguration.ApiKey = _config["StripeSettings:SecretKey"];
+        // public async Task<CustomerBasket> CreateOrUpdatePaymentIntent(string basketId)
+        // {
+        //     StripeConfiguration.ApiKey = _config["StripeSettings:SecretKey"];
 
-            var basket = await _basketRepository.GetBasketAsync(basketId);
+        //     var basket = await _basketRepository.GetBasketAsync(basketId);
 
-            if (basket == null) return null;
+        //     if (basket == null) return null;
 
-            var shippingPrice = 0m;
+        //     var shippingPrice = 0m;
 
-            if (basket.DeliveryMethodId.HasValue)
-            {
-                var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>()
-                    .GetByIdAsync((int)basket.DeliveryMethodId);
-                shippingPrice = deliveryMethod.Price;
-            }
+        //     if (basket.DeliveryMethodId.HasValue)
+        //     {
+        //         var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>()
+        //             .GetByIdAsync((int)basket.DeliveryMethodId);
+        //         shippingPrice = deliveryMethod.Price;
+        //     }
 
-            foreach (var item in basket.Items)
-            {
-                var productItem = await _unitOfWork.Repository<Product>()
-                .GetByIdAsync(item.Id);
+        //     foreach (var item in basket.Items)
+        //     {
+        //         var productItem = await _unitOfWork.Repository<Product>()
+        //         .GetByIdAsync(item.Id);
 
-                if (item.Price != productItem.Price)
-                {
-                    item.Price = productItem.Price;
-                }
-            }
+        //         if (item.Price != productItem.Price)
+        //         {
+        //             item.Price = productItem.Price;
+        //         }
+        //     }
 
-            var service = new PaymentIntentService();
+        //     var service = new PaymentIntentService();
 
-            PaymentIntent intent;
+        //     PaymentIntent intent;
 
-            if (string.IsNullOrEmpty(basket.PaymentIntentId))
-            {
-                var options = new PaymentIntentCreateOptions
-                {
-                    Amount = (long)basket.Items.Sum(i => i.Quantity * (i.Price * 100))
-                    + (long)shippingPrice * 100,
-                    Currency = "usd",
-                    PaymentMethodTypes = new List<string> { "card" }
-                };
-                intent = await service.CreateAsync(options);
-                basket.PaymentIntentId = intent.Id;
-                basket.ClientSecret = intent.ClientSecret;
-            }
-            else
-            {
-                var options = new PaymentIntentUpdateOptions
-                {
-                    Amount = (long)basket.Items.Sum(i => i.Quantity * (i.Price * 100))
-                   + (long)shippingPrice * 100
-                };
-                await service.UpdateAsync(basket.PaymentIntentId, options);
-            }
-            await _basketRepository.UpdateBasketAsync(basket);
+        //     if (string.IsNullOrEmpty(basket.PaymentIntentId))
+        //     {
+        //         var options = new PaymentIntentCreateOptions
+        //         {
+        //             Amount = (long)basket.Items.Sum(i => i.Quantity * (i.Price * 100))
+        //             + (long)shippingPrice * 100,
+        //             Currency = "usd",
+        //             PaymentMethodTypes = new List<string> { "card" }
+        //         };
+        //         intent = await service.CreateAsync(options);
+        //         basket.PaymentIntentId = intent.Id;
+        //         basket.ClientSecret = intent.ClientSecret;
+        //     }
+        //     else
+        //     {
+        //         var options = new PaymentIntentUpdateOptions
+        //         {
+        //             Amount = (long)basket.Items.Sum(i => i.Quantity * (i.Price * 100))
+        //            + (long)shippingPrice * 100
+        //         };
+        //         await service.UpdateAsync(basket.PaymentIntentId, options);
+        //     }
+        //     await _basketRepository.UpdateBasketAsync(basket);
 
-            return basket;
-        }
+        //     return basket;
+        // }
 
         public async Task<Order> UpdateOrderPaymentFailed(string paymentIntentId)
         {

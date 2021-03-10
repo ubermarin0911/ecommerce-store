@@ -41,7 +41,7 @@ namespace API.Controllers
             return presignedAcceptance;
         }
 
-        [Authorize]
+
         [HttpGet("referenceOrder")]
         public async Task<ActionResult<string>> GenerateReferenceOrder()
         {

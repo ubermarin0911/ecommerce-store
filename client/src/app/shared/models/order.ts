@@ -1,9 +1,9 @@
 import { IAddress } from './address';
+import { IShippingAddress } from './transaction';
 
 export interface IOrderToCreate {
     basketId: string;
-    deliveryMethodId: number;
-    shipToAddress: IAddress;
+    shipToAddress: IShippingAddress;
 }
 
 export interface IOrder {

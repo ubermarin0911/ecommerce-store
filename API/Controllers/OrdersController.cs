@@ -5,6 +5,7 @@ using API.Errors;
 using API.Extensions;
 using AutoMapper;
 using Core.Entities.OrderAggregate;
+using Core.Entities.Payment;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,17 +23,15 @@ namespace API.Controllers
             _orderService = orderService;
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder(OrderDto orderDto)
+        public async Task<ActionResult<Order>> CreateOrder(Transaction transaction)
         {
             var email = HttpContext.User.RetrieveEmailFromPrincipal();
 
-            var address = _mapper.Map<AddressDto, Address>(orderDto.ShipToAddress);
+            var order = await _orderService.CreateOrderAsync(email, transaction);
 
-            var order = await _orderService.CreateOrderAsync(email, orderDto.DeliveryMethodId,
-            orderDto.BasketId, address);
-
-            if (order == null) return BadRequest(new ApiResponse(400, "Problem creating order"));
+            if (order == null) return BadRequest(new ApiResponse(400, "Problema creando pedido"));
 
             return Ok(order);
         }

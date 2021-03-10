@@ -4,22 +4,18 @@ namespace Core.Entities.Payment
 {
     public class Transaction
     {
-        [Required]
+        public string basketId { get; set; }
         public string acceptance_token { get; set; }
-        [Required]
-        public int amount_in_cents { get; set; }
-        [Required]
+        public int? amount_in_cents { get; set; }
         public string currency { get; set; }
-        [Required]
         public string customer_email { get; set; }
         [Required]
         public PaymentMethod payment_method { get; set; }
-        [Required]
         public string reference { get; set; }
-
-        // public CustomerData customer_data { get; set; }
-        // public ShippingAddress shipping_address { get; set; }
+        public CustomerData customer_data { get; set; }
+        public ShippingAddress shipping_address { get; set; }
     }
+
 
     public class PaymentMethod
     {
@@ -38,12 +34,10 @@ namespace Core.Entities.Payment
     public class ShippingAddress
     {
         public string address_line_1 { get; set; }
-        public string address_line_2 { get; set; }
         public string country { get; set; }
         public string region { get; set; }
         public string city { get; set; }
         public string name { get; set; }
         public string phone_number { get; set; }
-        public string postal_code { get; set; }
     }
 }

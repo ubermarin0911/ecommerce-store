@@ -5,4 +5,16 @@
 
 </div>
 
-<p>nequi</p>
+<form [formGroup]="nequiForm" (ngSubmit)="submitOrder()">
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-12">
+                <app-text-input formControlName="phoneNumber" [label]="'Número de celular'"></app-text-input>
+            </div>
+
+            <div class="d-flex justify-content-center w-100">
+                <button type="submit" class="btn btn-primary px-5 my-3">Pagar</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -7,10 +7,10 @@ namespace API.Dtos
         [Required]
         public string Name { get; set; }
         [Required]
-        public string UserAddress { get; set; }
+        public string Address_line_1 { get; set; }
         [Required]
         public string City { get; set; }
         [Required]
-        public string PhoneNumber { get; set; }
+        public string Phone_number { get; set; }
     }
 }
