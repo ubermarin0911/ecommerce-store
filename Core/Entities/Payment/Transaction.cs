@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Dynamic;
 
 namespace Core.Entities.Payment
 {
@@ -11,18 +13,24 @@ namespace Core.Entities.Payment
         public string customer_email { get; set; }
         [Required]
         public PaymentMethod payment_method { get; set; }
-        public string reference { get; set; }
+        public string reference
+        { get; set; }
         public CustomerData customer_data { get; set; }
         public ShippingAddress shipping_address { get; set; }
     }
 
-
     public class PaymentMethod
     {
         public string type { get; set; }
-        public string token { get; set; }
+        public string payment_description { get; set; }
+        public string user_type { get; set; }
+        public string sandbox_status { get; set; }
         public int? installments { get; set; }
-        public string phone_number { get; set; }
+        public string token { get; set; }
+        public string phone_number { get; set; } = "0";
+        public string user_legal_id_type { get; set; }
+        public string user_legal_id { get; set; } = "0";
+        public string financial_institution_code { get; set; } = "0";
     }
 
     public class CustomerData

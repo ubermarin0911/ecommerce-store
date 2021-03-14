@@ -1,17 +1,13 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Core.Entities;
 using Core.Entities.OrderAggregate;
 using Core.Entities.Payment;
 using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.Extensions.Configuration;
-using Stripe;
 using Order = Core.Entities.OrderAggregate.Order;
 using Newtonsoft.Json;
 using System;
@@ -62,11 +58,8 @@ namespace Infrastructure.Services
             using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", publicKey);
-
                 var transactionJson = await Task.FromResult(JsonConvert.SerializeObject(transaction));
-
                 var httpContent = new StringContent(transactionJson, Encoding.UTF8, "application/json");
-
                 var httpResponse = await httpClient.PostAsync($"{url}transactions", httpContent);
 
                 if (httpResponse.Content != null)

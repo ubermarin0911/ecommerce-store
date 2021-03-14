@@ -1,0 +1,18 @@
+<div class="form-group row">
+    <div class="col-sm-10">
+        <select class="form-control"
+        #selectElement
+        value="PERSON"
+        (change)="onChange($event.target.value)"
+        (blur)="onTouched()">
+          
+            <option
+                *ngFor="let option of options"
+                [value]="option.value"
+                [disabled]="option.disabled"
+                [selected]="option.value === 'PERSON'"> {{ option.label }}
+            </option>
+
+        </select>
+    </div>
+</div>    

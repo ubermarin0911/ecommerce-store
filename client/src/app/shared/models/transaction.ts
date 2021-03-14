@@ -14,7 +14,7 @@ export interface ITransaction {
     currency: string;
     customer_email: string;
     reference: string;
-    payment_method: IPaymentMethod;
+    payment_method: any;
     redirect_url?: string;
     customer_data?: ICustomerData;
     shipping_address?: IShippingAddress;
@@ -32,12 +32,6 @@ export interface ICustomerData {
     full_name: string;
 }
   
-export interface IPaymentMethod {
-    type: string;
-    token?: string;
-    installments?: number;
-    phone_number?: string;
-}
 
 export class Transaction implements ITransaction{
     acceptance_token: string = "";
@@ -48,22 +42,14 @@ export class Transaction implements ITransaction{
 
     basketId: string = "";
 
-    payment_method: IPaymentMethod;
+    payment_method: any = {};
     shipping_address: IShippingAddress;
     customer_data: ICustomerData;
 
     constructor(){
-        this.payment_method = new PaymentMethod();
         this.shipping_address = new ShippingAddress();
         this.customer_data = new CustomerData();
     }
-}
-
-export class PaymentMethod implements IPaymentMethod{
-    type: string = "";
-    token?: string = "";
-    installments?: number = 1;
-    phone_number?: string = "";
 }
 
 export class CustomerData implements ICustomerData{

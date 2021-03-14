@@ -27,9 +27,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder(Transaction transaction)
         {
-            var email = HttpContext.User.RetrieveEmailFromPrincipal();
+            transaction.customer_email = HttpContext.User.RetrieveEmailFromPrincipal();
 
-            var order = await _orderService.CreateOrderAsync(email, transaction);
+            var order = await _orderService.CreateOrderAsync(transaction);
 
             if (order == null) return BadRequest(new ApiResponse(400, "Problema creando pedido"));
 

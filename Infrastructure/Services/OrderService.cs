@@ -29,7 +29,7 @@ namespace Infrastructure.Services
             _basketRepo = basketRepo;
         }
 
-        public async Task<Order> CreateOrderAsync(string buyerEmail, Transaction transaction)
+        public async Task<Order> CreateOrderAsync(Transaction transaction)
         {
             //Obtener canasta del repositorio
             var basket = await _basketRepo.GetBasketAsync(transaction.basketId);
@@ -52,7 +52,6 @@ namespace Infrastructure.Services
             var subtotal = items.Sum(item => item.Price * item.Quantity);
 
             transaction.amount_in_cents = Int32.Parse($"{subtotal}00");
-            transaction.customer_email = buyerEmail;
             transaction.currency = "COP";
             transaction.shipping_address.country = "CO";
             transaction.shipping_address.region = "Magdalena";
@@ -66,8 +65,7 @@ namespace Infrastructure.Services
 
             Order order = null;
 
-            if (transactionResponse.data.status == "APPROVED" ||
-            transactionResponse.data.status == "PENDING")
+            if (transactionResponse.data != null)
             {
                 Address addressShipping = new Address
                 {
@@ -78,7 +76,7 @@ namespace Infrastructure.Services
                 };
 
                 //Crear orden
-                order = new Order(items, buyerEmail, addressShipping,
+                order = new Order(items, transaction.customer_email, addressShipping,
                  subtotal, transaction.reference);
 
                 _unitOfWork.Repository<Order>().Add(order);

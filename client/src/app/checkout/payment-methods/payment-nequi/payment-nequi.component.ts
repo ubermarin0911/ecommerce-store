@@ -37,7 +37,7 @@ export class PaymentNequiComponent implements OnInit {
 
     const basket = this.basketService.getCurrentBasketValue();
     this.transaction.payment_method.type = paymentMethod.Nequi;
-    this.transaction.payment_method.phone_number = this.nequiForm.controls["phoneNumber"].value;
+    this.transaction.payment_method.phone_number = this.nequiForm.get('phoneNumber').value;
     
     try {
       const createdOrder = await this.checkoutService.createOrderTransaction(basket,

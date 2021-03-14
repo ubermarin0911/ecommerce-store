@@ -16,6 +16,7 @@ import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import { NgImageSliderModule } from 'ng-image-slider';
+import { SelectInputComponent } from './components/select-input/select-input.component';
 
 @NgModule({
   declarations: [PagingHeaderComponent, 
@@ -24,7 +25,8 @@ import { NgImageSliderModule } from 'ng-image-slider';
     TextInputComponent, 
     StepperComponent, 
     BasketSummaryComponent, 
-    ImageGalleryComponent
+    ImageGalleryComponent, 
+    SelectInputComponent
   ],
   imports: [
     CommonModule,
@@ -50,6 +52,7 @@ import { NgImageSliderModule } from 'ng-image-slider';
     BsDropdownModule,
     CollapseModule,
     TextInputComponent,
+    SelectInputComponent,
     CdkStepperModule,
     StepperComponent,
     BasketSummaryComponent,
