@@ -7,7 +7,7 @@ import { IOrderToCreate } from '../shared/models/order';
 import { BehaviorSubject } from 'rxjs';
 import { public_key } from 'wompi_keys/public_key';
 import { IDataMerchant, IMerchant, IPresignedAcceptance } from '../shared/models/merchant';
-import { Transaction } from '../shared/models/transaction';
+import { ICreditCardData, Transaction } from '../shared/models/transaction';
 import { IBasket } from '../shared/models/basket';
 import { FormGroup } from '@angular/forms';
 
@@ -16,6 +16,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class CheckoutService {
   baseUrl = environment.apiUrl;
+  wompiUrl = environment.wompiUrl;
 
   private referenceOrderSource = new BehaviorSubject<string>(null);
   referenceOrder$ = this.referenceOrderSource.asObservable();
@@ -26,16 +27,16 @@ export class CheckoutService {
     return this.http.post(`${this.baseUrl}payments/transaction`, transaction);
   }
 
-  generateReferenceOrder(){
-    return this.http.get(`${this.baseUrl}payments/referenceOrder`).pipe(
-      map((reference: string) => {
-       this.referenceOrderSource.next(reference);
-      })
-    );
+  async createOrderTransaction(transaction: Transaction) {
+    return this.createOrder(transaction).toPromise();
   }
 
   createOrder(transaction: Transaction){
     return this.http.post(`${this.baseUrl}orders`, transaction);
+  }
+
+  async tokenizeCreditCard(creditCard: ICreditCardData){
+    return this.http.post(`${this.wompiUrl}/tokens/cards`, creditCard).toPromise();;
   }
 
   getDeliveryMethods(){
@@ -44,22 +45,6 @@ export class CheckoutService {
         return dm.sort((a, b) => b.price - a.price);
       })
     );
-  }
-
-  async createOrderTransaction(basket: IBasket, checkoutForm: FormGroup, transaction: Transaction) {
-    const orderToCreate = this.getOrderToCreate(basket, checkoutForm);
-
-    transaction.basketId = orderToCreate.basketId;
-    transaction.shipping_address = orderToCreate.shipToAddress;
-
-    return this.createOrder(transaction).toPromise();
-  }
-
-  getOrderToCreate(basket: IBasket, checkoutForm: FormGroup) {
-    return {
-       basketId: basket.id,
-       shipToAddress: checkoutForm.get('addressForm').value
-    };
   }
 
 }

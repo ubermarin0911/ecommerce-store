@@ -36,12 +36,17 @@ export class PaymentNequiComponent implements OnInit {
     const paymentMethod = PaymentMethod;
 
     const basket = this.basketService.getCurrentBasketValue();
-    this.transaction.payment_method.type = paymentMethod.Nequi;
-    this.transaction.payment_method.phone_number = this.nequiForm.get('phoneNumber').value;
-    
+
+    this.transaction.payment_method = {
+      type : paymentMethod.Nequi,
+      phone_number : this.nequiForm.get('phoneNumber').value
+    }
+
+    this.transaction.shipping_address = this.checkoutForm.get('addressForm').value;
+    this.transaction.basketId = basket.id;
+
     try {
-      const createdOrder = await this.checkoutService.createOrderTransaction(basket,
-        this.checkoutForm, this.transaction);
+      const createdOrder = await this.checkoutService.createOrderTransaction(this.transaction);
       console.log(createdOrder);
       // const paymentResult = await this.confirmPaymentWithStripe(basket);
       // if (paymentResult.paymentIntent) {

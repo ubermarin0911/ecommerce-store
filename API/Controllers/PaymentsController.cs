@@ -42,14 +42,6 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("referenceOrder")]
-        public async Task<ActionResult<string>> GenerateReferenceOrder()
-        {
-            var referenceOrder = await _paymentService.GenerateReferenceOrderAsync();
-
-            return Ok(referenceOrder);
-        }
-
         [Authorize]
         [HttpPost("transaction")]
         public async Task CreateTransaction(Transaction transaction)

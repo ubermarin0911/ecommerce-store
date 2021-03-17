@@ -8,7 +8,7 @@
     <div class="container p-0">
         <div class="row mt-3">
             <div class="col-6">
-                <app-text-input class="card-number" formControlName="cardNumber" [label]="'Número de la tarjeta'"></app-text-input>
+                <app-text-input class="card-number" formControlName="number" [type]="'number'" [label]="'Número de la tarjeta'"></app-text-input>
             </div>
             <div class="col-6">
                 <app-text-input formControlName="card_holder" [label]="'Nombre en la tarjeta'"></app-text-input>
@@ -23,7 +23,7 @@
                 <app-text-input formControlName="cvc" [label]="'CVC'"></app-text-input>
             </div>
             <div class="form-inline col-8 col-lg-4 ">
-              <span>Pagar en <input type="number" class="form-control mx-3" value="1" min="1" max="36" ><strong>Cuota</strong> </span>
+              <span>Pagar en <input formControlName="installments" type="number" class="form-control mx-3" value="1" min="1" max="36" ><strong>Cuota</strong> </span>
             </div>
 
             <div class="col-12 col-lg-8">

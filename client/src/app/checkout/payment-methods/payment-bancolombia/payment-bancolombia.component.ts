@@ -47,15 +47,20 @@ export class PaymentBancolombiaComponent implements OnInit {
     const paymentMethod = PaymentMethod;
     
     const basket = this.basketService.getCurrentBasketValue();
-    this.transaction.payment_method.type = paymentMethod.BancolombiaTransfer;
-    this.transaction.payment_method.user_type = this.bancolombiaTransferForm.get('userType').value || this.userType.Person;
-    this.transaction.payment_method.sandbox_status = "APPROVED";
-    this.transaction.payment_method.payment_description = "Pago a tienda Plantas Pido";
-    debugger
+
+    this.transaction.payment_method = {
+      type : paymentMethod.BancolombiaTransfer,
+      user_type : this.bancolombiaTransferForm.get('userType').value || this.userType.Person,
+      payment_description :  "Pago a tienda Plantas Pido",
+      sandbox_status : "APPROVED"
+    }
+
+    this.transaction.shipping_address = this.checkoutForm.get('addressForm').value;
+    this.transaction.basketId = basket.id;
+    
     try {
       
-      const createdOrder = await this.checkoutService.createOrderTransaction(basket,
-        this.checkoutForm, this.transaction);
+      const createdOrder = await this.checkoutService.createOrderTransaction(this.transaction);
       console.log(createdOrder);
       // const paymentResult = await this.confirmPaymentWithStripe(basket);
       // if (paymentResult.paymentIntent) {

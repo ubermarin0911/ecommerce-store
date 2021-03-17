@@ -13,8 +13,7 @@ namespace Core.Entities.Payment
         public string customer_email { get; set; }
         [Required]
         public PaymentMethod payment_method { get; set; }
-        public string reference
-        { get; set; }
+        public string reference { get; set; }
         public CustomerData customer_data { get; set; }
         public ShippingAddress shipping_address { get; set; }
     }
@@ -25,6 +24,8 @@ namespace Core.Entities.Payment
         public string payment_description { get; set; }
         public string user_type { get; set; }
         public string sandbox_status { get; set; }
+
+        [Range(1, 36, ErrorMessage = "El número de cuotas debe estar entre {1} y {2}.")]
         public int? installments { get; set; }
         public string token { get; set; }
         public string phone_number { get; set; } = "0";

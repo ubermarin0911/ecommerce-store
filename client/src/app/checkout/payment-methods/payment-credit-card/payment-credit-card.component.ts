@@ -6,7 +6,8 @@ import { BasketService } from 'src/app/basket/basket.service';
 import { IBasket } from 'src/app/shared/models/basket';
 import { Transaction } from 'src/app/shared/models/transaction';
 import { CheckoutService } from '../../checkout.service';
-import { PaymentMethod } from '../../../shared/enums/paymentMethods';
+import { ICreditCardData } from '../../../shared/models/transaction';
+import { PaymentMethod } from 'src/app/shared/enums/paymentMethods';
 
 var valid = require("card-validator");
 
@@ -45,17 +46,62 @@ export class PaymentCreditCardComponent implements OnInit {
 
   createCreditCardForm(){
     this.creditCardForm = new FormGroup({
-      cardNumber: new FormControl('', Validators.required),
-      card_holder: new FormControl('', Validators.required),
-      exp_month: new FormControl('', Validators.required),
-      exp_year: new FormControl('', Validators.required),
-      cvc: new FormControl('', Validators.required),
-      installments: new FormControl('', Validators.required)
+      number: new FormControl('4242424242424242', Validators.required),
+      card_holder: new FormControl('Nombre persona', Validators.required),
+      exp_month: new FormControl('08', Validators.required),
+      exp_year: new FormControl('28', Validators.required),
+      cvc: new FormControl('123', Validators.required),
+      installments: new FormControl(1, Validators.required)
     });
   }
 
   async submitOrder(){
 
+   const creditCardData: ICreditCardData = {
+     card_holder : this.getCreditCardValueForm('card_holder'),
+     number : this.getCreditCardValueForm('number'),
+     exp_month : this.getCreditCardValueForm('exp_month'),
+     exp_year : this.getCreditCardValueForm('exp_year'),
+     cvc : this.getCreditCardValueForm('cvc')
+   }
+
+   const basket = this.basketService.getCurrentBasketValue();
+   const paymentMethod = PaymentMethod;
+   
+   try {
+    const tokenData: any = await this.checkoutService.tokenizeCreditCard(creditCardData);
+    
+    this.transaction.payment_method = {
+      type : paymentMethod.CreditCard,
+      installments : this.getCreditCardValueForm('installments'),
+      token : tokenData.data.id
+    }
+    this.transaction.shipping_address = this.checkoutForm.get('addressForm').value;
+    this.transaction.basketId = basket.id;
+    const createdOrder = await this.checkoutService.createOrderTransaction(this.transaction);
+
+    console.log(createdOrder);
+    // const paymentResult = await this.confirmPaymentWithStripe(basket);
+    // if (paymentResult.paymentIntent) {
+    //   this.basketService.deleteLocalBasket(basket.id);
+    //   const navigationExtras: NavigationExtras = { state: createdOrder };
+    //   this.router.navigate(['checkout/success'], navigationExtras);
+    // } else {
+    //   this.toastr.error(paymentResult.error.message);
+    // }
+    // this.loading = false;
+  } catch (error) {
+    this.toastr.error("No se pudo realizar la compra. Verifique los datos ingresados.");
+    if(error.errors){
+      for (const err of error.errors) {
+        this.toastr.error(err);
+      }
+    }
+  }
   } 
+
+  getCreditCardValueForm(fieldname: string){
+    return this.creditCardForm.get(fieldname).value;
+  }
 
 }
