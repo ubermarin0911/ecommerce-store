@@ -48,9 +48,6 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("BuyerEmail")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("DeliveryMethodId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<long>("OrderDate")
                         .HasColumnType("INTEGER");
 
@@ -64,9 +61,10 @@ namespace Infrastructure.Data.Migrations
                     b.Property<double>("Subtotal")
                         .HasColumnType("REAL");
 
-                    b.HasKey("Id");
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("DeliveryMethodId");
+                    b.HasKey("Id");
 
                     b.ToTable("Orders");
                 });
@@ -161,10 +159,6 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Core.Entities.OrderAggregate.Order", b =>
                 {
-                    b.HasOne("Core.Entities.OrderAggregate.DeliveryMethod", "DeliveryMethod")
-                        .WithMany()
-                        .HasForeignKey("DeliveryMethodId");
-
                     b.OwnsOne("Core.Entities.OrderAggregate.Address", "ShipToAddress", b1 =>
                         {
                             b1.Property<int>("OrderId")

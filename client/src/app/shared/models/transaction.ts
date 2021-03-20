@@ -1,3 +1,4 @@
+import { environment } from "src/environments/environment";
 import { IAddress } from "./address";
 
 export interface ITransaction {
@@ -15,7 +16,7 @@ export interface ITransaction {
     customer_email: string;
     reference: string;
     payment_method: any;
-    redirect_url?: string;
+    redirect_url: string;
     customer_data?: ICustomerData;
     shipping_address?: IShippingAddress;
 }
@@ -39,9 +40,9 @@ export class Transaction implements ITransaction{
     currency: string = "";
     customer_email: string = "";
     reference: string = "";
+    redirect_url: string = `${environment.clientUrl}checkout/pedido`;
 
     basketId: string = "";
-
     payment_method: any = {};
     shipping_address: IShippingAddress;
     customer_data: ICustomerData;

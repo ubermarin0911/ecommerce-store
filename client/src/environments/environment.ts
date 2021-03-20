@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   apiUrl: 'https://localhost:5001/api/',
-  wompiUrl: 'https://sandbox.wompi.co/v1'
+  wompiUrl: 'https://sandbox.wompi.co/v1',
+  clientUrl: 'https://localhost:4200/'
 };
 
 /*

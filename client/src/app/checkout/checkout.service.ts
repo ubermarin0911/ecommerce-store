@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { IDeliveryMethod } from '../shared/models/deliveryMethod';
 import { IOrderToCreate } from '../shared/models/order';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, interval } from 'rxjs';
 import { public_key } from 'wompi_keys/public_key';
 import { IDataMerchant, IMerchant, IPresignedAcceptance } from '../shared/models/merchant';
 import { ICreditCardData, Transaction } from '../shared/models/transaction';
@@ -36,8 +36,19 @@ export class CheckoutService {
   }
 
   async tokenizeCreditCard(creditCard: ICreditCardData){
-    return this.http.post(`${this.wompiUrl}/tokens/cards`, creditCard).toPromise();;
+    return this.http.post(`${this.wompiUrl}/tokens/cards`, creditCard).toPromise();
   }
+
+  async getFinancialInstitutions(){
+    return this.http.get(`${this.wompiUrl}/pse/financial_institutions`).toPromise();
+  }
+
+  pollingTransaction(transaction_id : string){
+    return interval(1500).pipe(
+      switchMap(() => this.http.get(`${this.wompiUrl}/transactions/${transaction_id}`)),
+    )
+  }
+
 
   getDeliveryMethods(){
     return this.http.get(`${this.baseUrl}orders/deliveryMethods`).pipe(

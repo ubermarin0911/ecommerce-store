@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20210305185338_InitialCreate")]
+    [Migration("20210320153852_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,9 +50,6 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("BuyerEmail")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("DeliveryMethodId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<long>("OrderDate")
                         .HasColumnType("INTEGER");
 
@@ -66,9 +63,10 @@ namespace Infrastructure.Data.Migrations
                     b.Property<double>("Subtotal")
                         .HasColumnType("REAL");
 
-                    b.HasKey("Id");
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("DeliveryMethodId");
+                    b.HasKey("Id");
 
                     b.ToTable("Orders");
                 });
@@ -163,10 +161,6 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Core.Entities.OrderAggregate.Order", b =>
                 {
-                    b.HasOne("Core.Entities.OrderAggregate.DeliveryMethod", "DeliveryMethod")
-                        .WithMany()
-                        .HasForeignKey("DeliveryMethodId");
-
                     b.OwnsOne("Core.Entities.OrderAggregate.Address", "ShipToAddress", b1 =>
                         {
                             b1.Property<int>("OrderId")

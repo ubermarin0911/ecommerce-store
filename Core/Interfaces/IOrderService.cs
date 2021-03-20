@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Entities.OrderAggregate;
 using Core.Entities.Payment;
+using Core.Entities.Payment.Webhook;
+using Transaction = Core.Entities.Payment.Transaction;
 
 namespace Core.Interfaces
 {
@@ -11,5 +13,6 @@ namespace Core.Interfaces
         Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail);
         Task<Order> GetOrderByIdAsync(int id, string buyerEmail);
         Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync();
+
     }
 }

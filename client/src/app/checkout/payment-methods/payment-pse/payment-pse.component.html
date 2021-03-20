@@ -5,4 +5,33 @@
 
 </div>
 
-<p>payment-pse works!</p>
+<form [formGroup]="pseForm" (ngSubmit)="submitOrder()">
+
+    <div class="container p-0">
+        <div class="row mt-3">
+            <div class="col-12">
+                <app-select-input formControlName="userType" 
+                [options]="optionsUserType"  
+                [label]="'Tipo de persona'"></app-select-input>
+            </div>
+            <div class="col-12">
+                <app-select-input formControlName="legalIdType" 
+                [options]="optionsLegalIdType"  
+                [label]="'Tipo de documento'"></app-select-input>
+            </div>
+            <div class="col-12">
+                <app-text-input formControlName="legalId" [label]="'Número de documento'"></app-text-input>
+            </div>
+            <div class="col-12">
+                <app-select-input formControlName="institutionCode" 
+                [options]="optionsFinancialInstitutionCodes"  
+                [label]="'Código de la institución financiera'"></app-select-input>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center w-100">
+        <button type="submit" class="btn btn-primary px-5 my-3">Pagar</button>
+    </div>
+
+</form>

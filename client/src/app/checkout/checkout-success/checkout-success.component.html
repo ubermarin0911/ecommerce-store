@@ -1,7 +1,10 @@
 <div class="container mt-5">
-    <div><i class="fa fa-check-circle fa-5x" style="color: green;"></i></div>
-    <h2>Gracias. Tu compra ha sido confirmada.</h2>
-    <p class="mb-4">En un plazo de 24 horas estará llegando tu pedido a tu casa.</p>
+    <div><i class="fa fa-5x" [class]="paymentStatusIcon"></i></div>
+
+    <h2>{{ titleResponse }}</h2>
+    <p class="mb-4">{{ descriptionResponse }}</p>
+
+    <button *ngIf="orderStatus === 'DECLINED' || orderStatus === 'VOIDED' || orderStatus === 'ERROR'" routerLink="/checkout" class="btn btn-outline-info mr-3">Reintentar pago</button>
     <button *ngIf="order" routerLink="/orders/{{order?.id}}" class="btn btn-outline-success">Mira tu pedido</button>
     <button *ngIf="!order" routerLink="/orders" class="btn btn-outline-success">Mira tus pedidos</button>
 </div>

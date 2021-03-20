@@ -4,11 +4,15 @@ namespace Core.Entities.OrderAggregate
 {
     public enum OrderStatus
     {
-        [EnumMember(Value = "Pendiente")]
+        [EnumMember(Value = "Transacción Pendiente")]
         Pending,
-        [EnumMember(Value = "Pago recibido")]
-        PaymentReceived,
-        [EnumMember(Value = "Pago fallido")]
-        PaymentFailed
+        [EnumMember(Value = "Transacción aprobada")]
+        Approved,
+        [EnumMember(Value = "Transacción rechazada")]
+        Declined,
+        [EnumMember(Value = "Transacción anulada")]
+        Voided,
+        [EnumMember(Value = "Error interno del método de pago respectivo")]
+        Error
     }
 }

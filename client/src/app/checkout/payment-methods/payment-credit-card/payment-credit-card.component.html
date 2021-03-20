@@ -14,13 +14,13 @@
                 <app-text-input formControlName="card_holder" [label]="'Nombre en la tarjeta'"></app-text-input>
             </div>
             <div class="col-3">
-                <app-text-input formControlName="exp_month" [label]="'Mes'"></app-text-input>
+                <app-text-input formControlName="exp_month" [type]="'number'" [label]="'Mes'"></app-text-input>
             </div>
             <div class="col-4">
-                <app-text-input formControlName="exp_year" [label]="'Año'"></app-text-input>
+                <app-text-input formControlName="exp_year" [type]="'number'" [label]="'Año'"></app-text-input>
             </div>
             <div class="col-5">
-                <app-text-input formControlName="cvc" [label]="'CVC'"></app-text-input>
+                <app-text-input formControlName="cvc" [type]="'number'" [label]="'CVC'"></app-text-input>
             </div>
             <div class="form-inline col-8 col-lg-4 ">
               <span>Pagar en <input formControlName="installments" type="number" class="form-control mx-3" value="1" min="1" max="36" ><strong>Cuota</strong> </span>

@@ -6,10 +6,11 @@ using Core.Entities;
 using Core.Entities.OrderAggregate;
 using Core.Entities.Payment;
 using Core.Entities.Payment.Response;
+using Core.Entities.Payment.Webhook;
 using Core.Interfaces;
 using Core.Specifications;
-using DataTransactionResponse = Core.Entities.Payment.Response.Data;
-
+using Microsoft.Extensions.Configuration;
+using Transaction = Core.Entities.Payment.Transaction;
 
 namespace Infrastructure.Services
 {
@@ -18,13 +19,16 @@ namespace Infrastructure.Services
         private readonly IPaymentService _paymentService;
         private readonly IBasketRepository _basketRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _config;
 
         public OrderService(
             IPaymentService paymentService,
             IBasketRepository basketRepo,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IConfiguration config)
         {
             _unitOfWork = unitOfWork;
+            _config = config;
             _paymentService = paymentService;
             _basketRepo = basketRepo;
         }
@@ -50,6 +54,7 @@ namespace Infrastructure.Services
 
             //Calcular subtotal
             var subtotal = items.Sum(item => item.Price * item.Quantity);
+
 
             transaction.amount_in_cents = Int32.Parse($"{subtotal}00");
             transaction.currency = "COP";
@@ -77,7 +82,7 @@ namespace Infrastructure.Services
 
                 //Crear orden
                 order = new Order(items, transaction.customer_email, addressShipping,
-                 subtotal, transaction.reference);
+                 subtotal, transaction.reference, transactionResponse.data.id);
 
                 _unitOfWork.Repository<Order>().Add(order);
 

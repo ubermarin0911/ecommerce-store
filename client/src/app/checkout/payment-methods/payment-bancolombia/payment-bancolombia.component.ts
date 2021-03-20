@@ -6,6 +6,8 @@ import { PaymentMethod, UserType } from 'src/app/shared/enums/paymentMethods';
 import { Transaction } from 'src/app/shared/models/transaction';
 import { CheckoutService } from '../../checkout.service';
 import { SelectOption } from '../../../shared/models/selectOption';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment-bancolombia',
@@ -20,11 +22,13 @@ export class PaymentBancolombiaComponent implements OnInit {
   transaction: Transaction = new Transaction();
 
   optionsUserType: SelectOption[] = [];
+  pollingRequest : Subscription;
 
   userType = UserType;
 
   constructor(private basketService: BasketService,
-    private checkoutService: CheckoutService) { }
+    private checkoutService: CheckoutService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.initOptions();
@@ -51,7 +55,7 @@ export class PaymentBancolombiaComponent implements OnInit {
     this.transaction.payment_method = {
       type : paymentMethod.BancolombiaTransfer,
       user_type : this.bancolombiaTransferForm.get('userType').value || this.userType.Person,
-      payment_description :  "Pago a tienda Plantas Pido",
+      payment_description : "Pago a tienda Plantas Pido",
       sandbox_status : "APPROVED"
     }
 
@@ -60,8 +64,10 @@ export class PaymentBancolombiaComponent implements OnInit {
     
     try {
       
-      const createdOrder = await this.checkoutService.createOrderTransaction(this.transaction);
-      console.log(createdOrder);
+      const createdOrder: any = await this.checkoutService.createOrderTransaction(this.transaction);
+
+      this.pollingTransaction(createdOrder.transactionId);
+
       // const paymentResult = await this.confirmPaymentWithStripe(basket);
       // if (paymentResult.paymentIntent) {
       //   this.basketService.deleteLocalBasket(basket.id);
@@ -75,4 +81,17 @@ export class PaymentBancolombiaComponent implements OnInit {
       console.log(error);
     }
   } 
+  
+  private pollingTransaction(transaction_id: string){
+    this.pollingRequest = this.checkoutService.pollingTransaction(transaction_id).subscribe(
+      (response:any) => {
+        if(response.data.payment_method.hasOwnProperty("extra")){
+          window.location.assign(response.data.payment_method.extra.async_payment_url);
+          this.pollingRequest.unsubscribe();
+        }
+      },
+      error => console.log(error)
+    );
+  }
+
 }

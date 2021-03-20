@@ -13,6 +13,7 @@ namespace Core.Entities.Payment
         public string customer_email { get; set; }
         [Required]
         public PaymentMethod payment_method { get; set; }
+        public string redirect_url { get; set; }
         public string reference { get; set; }
         public CustomerData customer_data { get; set; }
         public ShippingAddress shipping_address { get; set; }

@@ -10,15 +10,17 @@ namespace Core.Entities.OrderAggregate
         }
 
         public Order(IReadOnlyList<OrderItem> orderItems, string buyerEmail, Address shipToAddress,
-        decimal subtotal, string reference)
+        decimal subtotal, string reference, string transactionId)
         {
             OrderItems = orderItems;
             BuyerEmail = buyerEmail;
             ShipToAddress = shipToAddress;
             Subtotal = subtotal;
             Reference = reference;
+            TransactionId = transactionId;
         }
 
+        public string TransactionId { get; set; }
         public string BuyerEmail { get; set; }
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
         public Address ShipToAddress { get; set; }

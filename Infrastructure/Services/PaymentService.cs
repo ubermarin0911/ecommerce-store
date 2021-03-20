@@ -12,6 +12,11 @@ using Order = Core.Entities.OrderAggregate.Order;
 using Newtonsoft.Json;
 using System;
 using Core.Entities.Payment.Response;
+using System.Security.Cryptography;
+using Core.Entities.Payment.Webhook;
+using Transaction = Core.Entities.Payment.Transaction;
+using TransactionWebhook = Core.Entities.Payment.Webhook.Transaction;
+using System.Reflection;
 
 namespace Infrastructure.Services
 {
@@ -75,13 +80,13 @@ namespace Infrastructure.Services
         {
             Random random = new Random();
             const string validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            const int lenghtReference = 30;
+            const int lengthReference = 30;
 
             string randomReference;
             Order orderByReference = null;
             do
             {
-                randomReference = new string(Enumerable.Repeat(validCharacters, lenghtReference)
+                randomReference = new string(Enumerable.Repeat(validCharacters, lengthReference)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
 
                 var spec = new OrderByReferenceSpecification(randomReference);
@@ -94,92 +99,81 @@ namespace Infrastructure.Services
             return randomReference;
         }
 
-        // public async Task<CustomerBasket> CreateOrUpdatePaymentIntent(string basketId)
-        // {
-        //     StripeConfiguration.ApiKey = _config["StripeSettings:SecretKey"];
-
-        //     var basket = await _basketRepository.GetBasketAsync(basketId);
-
-        //     if (basket == null) return null;
-
-        //     var shippingPrice = 0m;
-
-        //     if (basket.DeliveryMethodId.HasValue)
-        //     {
-        //         var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>()
-        //             .GetByIdAsync((int)basket.DeliveryMethodId);
-        //         shippingPrice = deliveryMethod.Price;
-        //     }
-
-        //     foreach (var item in basket.Items)
-        //     {
-        //         var productItem = await _unitOfWork.Repository<Product>()
-        //         .GetByIdAsync(item.Id);
-
-        //         if (item.Price != productItem.Price)
-        //         {
-        //             item.Price = productItem.Price;
-        //         }
-        //     }
-
-        //     var service = new PaymentIntentService();
-
-        //     PaymentIntent intent;
-
-        //     if (string.IsNullOrEmpty(basket.PaymentIntentId))
-        //     {
-        //         var options = new PaymentIntentCreateOptions
-        //         {
-        //             Amount = (long)basket.Items.Sum(i => i.Quantity * (i.Price * 100))
-        //             + (long)shippingPrice * 100,
-        //             Currency = "usd",
-        //             PaymentMethodTypes = new List<string> { "card" }
-        //         };
-        //         intent = await service.CreateAsync(options);
-        //         basket.PaymentIntentId = intent.Id;
-        //         basket.ClientSecret = intent.ClientSecret;
-        //     }
-        //     else
-        //     {
-        //         var options = new PaymentIntentUpdateOptions
-        //         {
-        //             Amount = (long)basket.Items.Sum(i => i.Quantity * (i.Price * 100))
-        //            + (long)shippingPrice * 100
-        //         };
-        //         await service.UpdateAsync(basket.PaymentIntentId, options);
-        //     }
-        //     await _basketRepository.UpdateBasketAsync(basket);
-
-        //     return basket;
-        // }
-
-        public async Task<Order> UpdateOrderPaymentFailed(string paymentIntentId)
+        private string GetSHA256(string concat)
         {
-            var spec = new OrderByReferenceSpecification(paymentIntentId);
-            var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
-
-            if (order == null) return null;
-
-            order.Status = OrderStatus.PaymentFailed;
-            await _unitOfWork.Complete();
-
-            return order;
+            SHA256 sha256 = SHA256Managed.Create();
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            byte[] stream = null;
+            StringBuilder sb = new StringBuilder();
+            stream = sha256.ComputeHash(encoding.GetBytes(concat));
+            for (int i = 0; i < stream.Length; i++) sb.AppendFormat("{0:X2}", stream[i]);
+            return sb.ToString();
         }
 
-        public async Task<Order> UpdateOrderPaymentSucceeded(string paymentIntentId)
+        private string GetConcatenatedEventValues(WompiWebhook webhook)
         {
-            var spec = new OrderByReferenceSpecification(paymentIntentId);
-            var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+            string secretEvent = _config["Wompi:SecretEvent"];
+            string properties = "";
 
-            if (order == null) return null;
+            foreach (var property in webhook.signature.properties)
+            {
+                string[] splitProperties = property.Split('.');
+                PropertyInfo prop = typeof(TransactionWebhook).GetProperty(splitProperties[1]);
+                properties += prop.GetValue(webhook.data.transaction, null);
+            }
 
-            order.Status = OrderStatus.PaymentReceived;
+            properties += webhook.timestamp + secretEvent;
+
+            return properties;
+        }
+
+        public async Task<bool> UpdatePayment(WompiWebhook webhook)
+        {
+            string concatenatedEventValues = GetConcatenatedEventValues(webhook);
+            var checksum = GetSHA256(concatenatedEventValues);
+
+            if (checksum == webhook.signature.checksum)
+            {
+                switch (webhook.@event)
+                {
+                    case "transaction.updated":
+                        return await UpdateOrderStatus(webhook);
+                }
+            }
+            return false;
+        }
+
+        private async Task<bool> UpdateOrderStatus(WompiWebhook webhook)
+        {
+            var spec = new OrderByReferenceSpecification(webhook.data.transaction.reference);
+            Order order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+
+            switch (webhook.data.transaction.status)
+            {
+                case "APPROVED":
+                    order.Status = OrderStatus.Approved;
+                    break;
+
+                case "DECLINED":
+                    order.Status = OrderStatus.Declined;
+                    break;
+
+                case "VOIDED":
+                    order.Status = OrderStatus.Voided;
+                    break;
+
+                case "ERROR":
+                    order.Status = OrderStatus.Error;
+                    break;
+            }
+
             _unitOfWork.Repository<Order>().Update(order);
 
-            await _unitOfWork.Complete();
+            var result = await _unitOfWork.Complete();
 
-            return order;
+            return order == null;
         }
+
     }
 
 }
