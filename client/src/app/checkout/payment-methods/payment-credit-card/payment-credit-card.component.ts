@@ -20,6 +20,7 @@ var valid = require("card-validator");
 export class PaymentCreditCardComponent implements OnInit {
   @Input() appStepper: CdkStepper;
   @Input() checkoutForm: FormGroup;
+  policyPrivacy: string;
 
   creditCardForm: FormGroup;
   
@@ -30,6 +31,10 @@ export class PaymentCreditCardComponent implements OnInit {
     private basketService: BasketService) { }
 
   ngOnInit(): void {
+    
+    this.checkoutService.getPresignedAcceptance().subscribe(data => {
+      this.policyPrivacy = data.permalink;
+    });
 
     this.createCreditCardForm();
 

@@ -26,14 +26,23 @@ export class PaymentBancolombiaComponent implements OnInit {
 
   userType = UserType;
 
+  policyPrivacy: string;
+
   constructor(private basketService: BasketService,
     private checkoutService: CheckoutService,
     private router: Router) { }
 
   ngOnInit(): void {
+
+    this.checkoutService.getPresignedAcceptance().subscribe(data => {
+      this.policyPrivacy = data.permalink;
+    });
+
     this.initOptions();
     this.createBancolombiaTransferForm();
   }
+
+  
 
   createBancolombiaTransferForm(){
     this.bancolombiaTransferForm = new FormGroup({

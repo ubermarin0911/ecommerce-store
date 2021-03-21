@@ -17,7 +17,7 @@ declare var WidgetCheckout;
   templateUrl: './checkout-payment.component.html',
   styleUrls: ['./checkout-payment.component.scss']
 })
-export class CheckoutPaymentComponent implements OnInit, OnDestroy {
+export class CheckoutPaymentComponent implements OnInit{
   @Input() checkoutForm: FormGroup;
   @Input() totalPriceOrder: number;
   @Input() appStepper: CdkStepper;
@@ -35,32 +35,9 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy {
     private router: Router) {
      }
 
-  ngOnDestroy(): void {
-  }
-
   ngOnInit(){
-  
   }
 
-  private generateReferenceOrder(){
-    
-  }
-
-  openCheckout(){
-    
-    // this.checkout = new WidgetCheckout({
-    //   currency: 'COP',
-    //   amountInCents: Number(`${this.totalPriceOrder}00`),
-    //   reference: 'AD0029dsd2sdsdsdedsdsd01221',
-    //   publicKey: this.wompi_public_key
-    // });
-
-    // this.checkout.open(function ( result ) {
-    //   var transaction = result.transaction
-    //   console.log('Transaction ID: ', transaction.id)
-    //   console.log('Transaction object: ', transaction)
-    // });
-  }
 
   openPaymentMethod(paymentMethod: string){
     this.paymentMethodSelected.emit(paymentMethod);

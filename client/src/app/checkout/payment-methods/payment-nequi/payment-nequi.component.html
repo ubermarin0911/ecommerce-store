@@ -13,6 +13,15 @@
             <div class="col-12">
                 <app-text-input formControlName="phoneNumber" [label]="'Número de celular'"></app-text-input>
             </div>
+            
+            <div class="col-12 col-lg-8">
+                <label for="acceptance">
+                    <input id="acceptance" type="checkbox" class="mr-2">
+                    <span >Acepto haber leído los <a target="_blank" [href]="policyPrivacy">Términos y Condiciones y la Política de Privacidad
+                    </a> para hacer este pago.
+                    </span>
+                </label>
+            </div>
 
             <div class="d-flex justify-content-center w-100">
                 <button type="submit" class="btn btn-primary px-5 my-3">Pagar</button>

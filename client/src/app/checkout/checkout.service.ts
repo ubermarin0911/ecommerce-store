@@ -3,13 +3,10 @@ import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
 import { IDeliveryMethod } from '../shared/models/deliveryMethod';
-import { IOrderToCreate } from '../shared/models/order';
-import { BehaviorSubject, interval } from 'rxjs';
-import { public_key } from 'wompi_keys/public_key';
-import { IDataMerchant, IMerchant, IPresignedAcceptance } from '../shared/models/merchant';
+import { BehaviorSubject, interval, of } from 'rxjs';
 import { ICreditCardData, Transaction } from '../shared/models/transaction';
-import { IBasket } from '../shared/models/basket';
-import { FormGroup } from '@angular/forms';
+import { IPresignedAcceptance } from '../shared/models/merchant';
+import { IFinancialInstitution } from '../shared/models/financialInstitution';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +14,8 @@ import { FormGroup } from '@angular/forms';
 export class CheckoutService {
   baseUrl = environment.apiUrl;
   wompiUrl = environment.wompiUrl;
+  presignedAcceptance : IPresignedAcceptance;
+  financialInstitutions : IFinancialInstitution;
 
   private referenceOrderSource = new BehaviorSubject<string>(null);
   referenceOrder$ = this.referenceOrderSource.asObservable();
@@ -39,9 +38,7 @@ export class CheckoutService {
     return this.http.post(`${this.wompiUrl}/tokens/cards`, creditCard).toPromise();
   }
 
-  async getFinancialInstitutions(){
-    return this.http.get(`${this.wompiUrl}/pse/financial_institutions`).toPromise();
-  }
+  
 
   pollingTransaction(transaction_id : string){
     return interval(1500).pipe(
@@ -49,6 +46,44 @@ export class CheckoutService {
     )
   }
 
+  async getFinancialInstitutionsPromise(){
+    return this.getFinancialInstitutions().toPromise();
+  }
+
+  async getPresignedAcceptancePromise(){
+    return this.getPresignedAcceptance().toPromise();
+  }
+
+  getFinancialInstitutions(){
+    if(this.financialInstitutions){
+      return of(this.financialInstitutions);
+    }
+
+    return this.http.get<IFinancialInstitution>(`${this.wompiUrl}/pse/financial_institutions`).pipe(
+      map(response => {
+        this.financialInstitutions = response;
+
+        return this.financialInstitutions;
+      })
+    );
+  }
+
+  getPresignedAcceptance(){
+ 
+    if(this.presignedAcceptance){
+      return of(this.presignedAcceptance);
+    }
+
+    return this.http.get<IPresignedAcceptance>(`${this.baseUrl}payments/presignedAcceptance`)
+    .pipe(
+      map(response => {
+        this.presignedAcceptance = response;
+
+        return this.presignedAcceptance;
+      })
+    );
+
+  }
 
   getDeliveryMethods(){
     return this.http.get(`${this.baseUrl}orders/deliveryMethods`).pipe(
@@ -57,5 +92,4 @@ export class CheckoutService {
       })
     );
   }
-
 }

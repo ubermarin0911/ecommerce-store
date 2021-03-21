@@ -7,6 +7,7 @@ import { SelectOption } from 'src/app/shared/models/selectOption';
 import { Transaction } from 'src/app/shared/models/transaction';
 import { CheckoutService } from '../../checkout.service';
 import { Subscription } from 'rxjs';
+import { IFinancialInstitution } from '../../../shared/models/financialInstitution';
 
 @Component({
   selector: 'app-payment-pse',
@@ -25,11 +26,16 @@ export class PaymentPseComponent implements OnInit {
   pollingRequest : Subscription;
 
   transaction: Transaction = new Transaction();
+  policyPrivacy: string;
+  financialInstitutions : IFinancialInstitution;
 
   constructor(private checkoutService: CheckoutService,
     private basketService: BasketService) { }
 
   ngOnInit(): void {
+    this.checkoutService.getPresignedAcceptance().subscribe(data => {
+      this.policyPrivacy = data.permalink;
+    }, error => console.log(error));
     this.initOptions();
     this.createPseForm();
   }
@@ -51,14 +57,17 @@ export class PaymentPseComponent implements OnInit {
     this.optionsLegalIdType.push(new SelectOption("CC", "Cédula de ciudadanía"));
     this.optionsLegalIdType.push(new SelectOption("NIT", "NIT"));
 
-    const financialInstitutions : any = await this.checkoutService.getFinancialInstitutions();
-    
-    for (let institution of financialInstitutions.data) {
-      this.optionsFinancialInstitutionCodes.push(
-        new SelectOption(institution["financial_institution_code"], 
-                         institution["financial_institution_name"]));
+    try{
+      this.financialInstitutions = await this.checkoutService.getFinancialInstitutionsPromise();
+    }catch(error){
+      console.log(error);
     }
-
+    
+    for (let institution of this.financialInstitutions.data) {
+      this.optionsFinancialInstitutionCodes.push(
+        new SelectOption(institution.financial_institution_code, 
+                         institution.financial_institution_name));
+    }
   }
 
   async submitOrder(){

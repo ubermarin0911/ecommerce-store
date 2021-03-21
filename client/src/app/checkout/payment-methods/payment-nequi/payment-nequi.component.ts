@@ -18,10 +18,15 @@ export class PaymentNequiComponent implements OnInit {
   nequiForm: FormGroup;
   transaction: Transaction = new Transaction();
 
+  policyPrivacy: string;
+
   constructor(private basketService: BasketService,
     private checkoutService: CheckoutService) { }
 
   ngOnInit(): void {
+    this.checkoutService.getPresignedAcceptance().subscribe(data => {
+      this.policyPrivacy = data.permalink;
+    });
     this.createNequiForm();
   }
 

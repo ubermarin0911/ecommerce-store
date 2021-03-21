@@ -24,6 +24,15 @@ export class CheckoutReviewComponent implements OnInit {
     this.basket$ = this.basketService.basket$;
   }
 
+  async getPresignedAcceptance(){
 
-
+    try{
+      await this.checkoutService.getFinancialInstitutionsPromise();
+      await this.checkoutService.getPresignedAcceptancePromise();
+      this.appStepper.next();
+    }catch (error) {
+      console.log(error);
+    }
+    
+  }
 }
