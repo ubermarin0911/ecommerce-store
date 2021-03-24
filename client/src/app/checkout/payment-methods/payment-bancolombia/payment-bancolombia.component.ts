@@ -2,12 +2,13 @@ import { CdkStepper } from '@angular/cdk/stepper';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasketService } from 'src/app/basket/basket.service';
-import { PaymentMethod, UserType } from 'src/app/shared/enums/paymentMethods';
+import { PaymentMethod } from 'src/app/shared/enums/paymentMethods';
 import { Transaction } from 'src/app/shared/models/transaction';
 import { CheckoutService } from '../../checkout.service';
 import { SelectOption } from '../../../shared/models/selectOption';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserType } from 'src/app/shared/enums/userTypes';
 
 @Component({
   selector: 'app-payment-bancolombia',
@@ -42,28 +43,35 @@ export class PaymentBancolombiaComponent implements OnInit {
     this.createBancolombiaTransferForm();
   }
 
-  
-
   createBancolombiaTransferForm(){
     this.bancolombiaTransferForm = new FormGroup({
-      userType: new FormControl('', Validators.required),
+      userType: new FormControl(this.userType.Person, Validators.required),
+      policyPrivacyAccepted: new FormControl(false, [Validators.required,
+        Validators.requiredTrue])
     });
   }
 
   initOptions(){
+    this.optionsUserType.push(new SelectOption("", "Selecciona tu tipo de persona", true));
     this.optionsUserType.push(new SelectOption(this.userType.Person, "Persona natural"));
     this.optionsUserType.push(new SelectOption("", "Persona jurídica (No disponible aún)", true));
   }
 
   async submitOrder(){
     // this.loading = true;
+
+    if(this.bancolombiaTransferForm.invalid) {
+      this.bancolombiaTransferForm.setErrors({ ...this.bancolombiaTransferForm.errors, 'invalidForm': true });
+      return;
+    }
+
     const paymentMethod = PaymentMethod;
     
     const basket = this.basketService.getCurrentBasketValue();
 
     this.transaction.payment_method = {
       type : paymentMethod.BancolombiaTransfer,
-      user_type : this.bancolombiaTransferForm.get('userType').value || this.userType.Person,
+      user_type : this.bancolombiaTransferForm.get('userType').value,
       payment_description : "Pago a tienda Plantas Pido",
       sandbox_status : "APPROVED"
     }

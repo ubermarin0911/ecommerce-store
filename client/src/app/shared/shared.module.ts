@@ -17,6 +17,7 @@ import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { ImageGalleryComponent } from './components/image-gallery/image-gallery.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import { SelectInputComponent } from './components/select-input/select-input.component';
+import { WompiPolicyPrivacyComponent } from './components/wompi-policy-privacy/wompi-policy-privacy.component';
 
 @NgModule({
   declarations: [PagingHeaderComponent, 
@@ -26,7 +27,7 @@ import { SelectInputComponent } from './components/select-input/select-input.com
     StepperComponent, 
     BasketSummaryComponent, 
     ImageGalleryComponent, 
-    SelectInputComponent
+    SelectInputComponent, WompiPolicyPrivacyComponent
   ],
   imports: [
     CommonModule,
@@ -58,7 +59,8 @@ import { SelectInputComponent } from './components/select-input/select-input.com
     BasketSummaryComponent,
     NgxGalleryModule,
     ImageGalleryComponent,
-    NgImageSliderModule
+    NgImageSliderModule,
+    WompiPolicyPrivacyComponent
   ],
 })
 export class SharedModule { }

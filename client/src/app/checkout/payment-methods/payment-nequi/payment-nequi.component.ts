@@ -5,6 +5,7 @@ import { BasketService } from 'src/app/basket/basket.service';
 import { PaymentMethod } from 'src/app/shared/enums/paymentMethods';
 import { Transaction } from 'src/app/shared/models/transaction';
 import { CheckoutService } from '../../checkout.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment-nequi',
@@ -21,6 +22,7 @@ export class PaymentNequiComponent implements OnInit {
   policyPrivacy: string;
 
   constructor(private basketService: BasketService,
+    private router: Router,
     private checkoutService: CheckoutService) { }
 
   ngOnInit(): void {
@@ -33,11 +35,19 @@ export class PaymentNequiComponent implements OnInit {
   createNequiForm(){
     this.nequiForm = new FormGroup({
       phoneNumber: new FormControl('', Validators.required),
+      policyPrivacyAccepted: new FormControl(false, [Validators.required,
+        Validators.requiredTrue])
     });
   }
   
   async submitOrder(){
     // this.loading = true;
+
+    if(this.nequiForm.invalid) {
+      this.nequiForm.setErrors({ ...this.nequiForm.errors, 'invalidForm': true });
+      return;
+    }
+
     const paymentMethod = PaymentMethod;
 
     const basket = this.basketService.getCurrentBasketValue();
@@ -52,7 +62,7 @@ export class PaymentNequiComponent implements OnInit {
 
     try {
       const createdOrder = await this.checkoutService.createOrderTransaction(this.transaction);
-      console.log(createdOrder);
+      this.router.navigateByUrl(`/checkout/pedido?id=${createdOrder['transactionId']}`);
       // const paymentResult = await this.confirmPaymentWithStripe(basket);
       // if (paymentResult.paymentIntent) {
       //   this.basketService.deleteLocalBasket(basket.id);

@@ -3,13 +3,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { BasketService } from 'src/app/basket/basket.service';
-import { IBasket } from 'src/app/shared/models/basket';
 import { Transaction } from 'src/app/shared/models/transaction';
 import { CheckoutService } from '../../checkout.service';
 import { ICreditCardData } from '../../../shared/models/transaction';
 import { PaymentMethod } from 'src/app/shared/enums/paymentMethods';
-
-var valid = require("card-validator");
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment-credit-card',
@@ -20,6 +18,7 @@ var valid = require("card-validator");
 export class PaymentCreditCardComponent implements OnInit {
   @Input() appStepper: CdkStepper;
   @Input() checkoutForm: FormGroup;
+  
   policyPrivacy: string;
 
   creditCardForm: FormGroup;
@@ -27,6 +26,7 @@ export class PaymentCreditCardComponent implements OnInit {
   transaction: Transaction = new Transaction();
 
   constructor(private checkoutService: CheckoutService,
+    private router: Router,
     private toastr: ToastrService, 
     private basketService: BasketService) { }
 
@@ -37,39 +37,36 @@ export class PaymentCreditCardComponent implements OnInit {
     });
 
     this.createCreditCardForm();
-
-    var numberValidation = valid.number("30569309025904");
- 
-    if (!numberValidation.isPotentiallyValid) {
-      console.log("INVALIDO");
-    }
-    
-    if (numberValidation.card) {
-      // console.log(numberValidation.card.type);
-    }
   }
 
   createCreditCardForm(){
     this.creditCardForm = new FormGroup({
-      number: new FormControl('4242424242424242', Validators.required),
-      card_holder: new FormControl('Nombre persona', Validators.required),
-      exp_month: new FormControl('08', Validators.required),
-      exp_year: new FormControl('28', Validators.required),
-      cvc: new FormControl('123', Validators.required),
-      installments: new FormControl(1, Validators.required)
+      number: new FormControl('', Validators.required),
+      card_holder: new FormControl('', Validators.required),
+      exp_month: new FormControl('', Validators.required),
+      exp_year: new FormControl('', Validators.required),
+      cvc: new FormControl('', Validators.required),
+      installments: new FormControl(1, Validators.required),
+      policyPrivacyAccepted: new FormControl(false, [Validators.required,
+      Validators.requiredTrue])
     });
   }
 
   async submitOrder(){
+    
+    if(this.creditCardForm.invalid) {
+      this.creditCardForm.setErrors({ ...this.creditCardForm.errors, 'invalidForm': true });
+      return;
+    }
 
    const creditCardData: ICreditCardData = {
      card_holder : this.getCreditCardValueForm('card_holder'),
-     number : this.getCreditCardValueForm('number'),
+     number : this.getCreditCardValueForm('number').replace(/\s/g, ''),
      exp_month : this.getCreditCardValueForm('exp_month'),
      exp_year : this.getCreditCardValueForm('exp_year'),
      cvc : this.getCreditCardValueForm('cvc')
    }
-
+ 
    const basket = this.basketService.getCurrentBasketValue();
    const paymentMethod = PaymentMethod;
    
@@ -84,8 +81,8 @@ export class PaymentCreditCardComponent implements OnInit {
     this.transaction.shipping_address = this.checkoutForm.get('addressForm').value;
     this.transaction.basketId = basket.id;
     const createdOrder = await this.checkoutService.createOrderTransaction(this.transaction);
-
-    console.log(createdOrder);
+    this.router.navigateByUrl(`/checkout/pedido?id=${createdOrder['transactionId']}`);
+    
     // const paymentResult = await this.confirmPaymentWithStripe(basket);
     // if (paymentResult.paymentIntent) {
     //   this.basketService.deleteLocalBasket(basket.id);
@@ -107,6 +104,22 @@ export class PaymentCreditCardComponent implements OnInit {
 
   getCreditCardValueForm(fieldname: string){
     return this.creditCardForm.get(fieldname).value;
+  }
+
+  onCardChange(cardTarget: any){
+    let position = cardTarget.selectionEnd;
+    let value = cardTarget.value;
+    let length = value.length;
+
+    value = value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
+
+    cardTarget.selectionEnd = position += ((value.charAt(position - 1) === ' ' && value.charAt(length - 1) === ' ' && length !== value.length) ? 1 : 0);
+    
+    this.setValuesForm({number: value});
+  }
+
+  setValuesForm(values : any){
+    this.creditCardForm.patchValue(values)
   }
 
 }

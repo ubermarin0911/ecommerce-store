@@ -8,6 +8,7 @@ import { Transaction } from 'src/app/shared/models/transaction';
 import { CheckoutService } from '../../checkout.service';
 import { Subscription } from 'rxjs';
 import { IFinancialInstitution } from '../../../shared/models/financialInstitution';
+import { LegalIdType } from '../../../shared/enums/legalIdTypes';
 
 @Component({
   selector: 'app-payment-pse',
@@ -29,6 +30,8 @@ export class PaymentPseComponent implements OnInit {
   policyPrivacy: string;
   financialInstitutions : IFinancialInstitution;
 
+  legalIdType = LegalIdType;
+
   constructor(private checkoutService: CheckoutService,
     private basketService: BasketService) { }
 
@@ -42,26 +45,32 @@ export class PaymentPseComponent implements OnInit {
   
   createPseForm(){
     this.pseForm = new FormGroup({
-      userType: new FormControl(0, Validators.required),
+      userType: new FormControl('', Validators.required),
       legalIdType: new FormControl('', Validators.required),
       legalId: new FormControl('', Validators.required), 
       institutionCode: new FormControl('', Validators.required),
-      paymentDescription:  new FormControl('', Validators.required),
+      paymentDescription:  new FormControl('Pago a tienda Plantas Pido', Validators.required),
+      policyPrivacyAccepted: new FormControl(false, [Validators.required,
+        Validators.requiredTrue])
     });
   }
 
   async initOptions(){
-    this.optionsUserType.push(new SelectOption(0, "Persona natural"));
-    this.optionsUserType.push(new SelectOption(1, "Persona jurídica"));
+    this.optionsUserType.push(new SelectOption("", "Selecciona tu tipo de persona", true));
+    this.optionsUserType.push(new SelectOption("0", "Persona natural"));
+    this.optionsUserType.push(new SelectOption("1", "Persona jurídica"));
 
-    this.optionsLegalIdType.push(new SelectOption("CC", "Cédula de ciudadanía"));
-    this.optionsLegalIdType.push(new SelectOption("NIT", "NIT"));
+    this.optionsLegalIdType.push(new SelectOption("", "Selecciona tu tipo de documento", true));
+    this.optionsLegalIdType.push(new SelectOption(this.legalIdType.CC, "Cédula de ciudadanía"));
+    this.optionsLegalIdType.push(new SelectOption(this.legalIdType.NIT, "NIT"));
 
     try{
       this.financialInstitutions = await this.checkoutService.getFinancialInstitutionsPromise();
     }catch(error){
       console.log(error);
     }
+
+    this.optionsFinancialInstitutionCodes.push(new SelectOption("", "Selecciona tu banco", true));
     
     for (let institution of this.financialInstitutions.data) {
       this.optionsFinancialInstitutionCodes.push(
@@ -71,17 +80,22 @@ export class PaymentPseComponent implements OnInit {
   }
 
   async submitOrder(){
+    if(this.pseForm.invalid) {
+      this.pseForm.setErrors({ ...this.pseForm.errors, 'invalidForm': true });
+      return;
+    }
+
     const paymentMethod = PaymentMethod;
     
     const basket = this.basketService.getCurrentBasketValue();
 
     this.transaction.payment_method = {
       type : paymentMethod.Pse,
-      user_type : this.pseForm.get('userType').value || "0",
-      user_legal_id_type: this.pseForm.get('legalIdType').value || "CC",
+      user_type : this.pseForm.get('userType').value,
+      user_legal_id_type: this.pseForm.get('legalIdType').value,
       user_legal_id: this.pseForm.get('legalId').value,
       financial_institution_code: this.pseForm.get('institutionCode').value,
-      payment_description : "Pago a tienda Plantas Pido"
+      payment_description : this.pseForm.get('paymentDescription').value
     }
 
     this.transaction.shipping_address = this.checkoutForm.get('addressForm').value;

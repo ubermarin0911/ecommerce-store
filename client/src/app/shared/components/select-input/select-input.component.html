@@ -1,16 +1,13 @@
-<div class="form-group row">
-    <div class="col-sm-10">
-        <select class="form-control"
-        #selectElement
-        (change)="onChange($event.target.value)"
-        (blur)="onTouched()">
-          
-            <option
-                *ngFor="let option of options"
-                [value]="option.value"
-                [disabled]="option.disabled"> {{ option.label }}
-            </option>
 
-        </select>
-    </div>
-</div>    
+<select class="form-control mb-3"
+#selectElement
+(change)="onChange($event.target.value)"
+(blur)="onTouched()">
+    
+    <option
+        *ngFor="let option of options"
+        [value]="option.value"
+        [disabled]="option.disabled"> {{ option.label }}
+    </option>
+
+</select>

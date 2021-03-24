@@ -4,7 +4,3 @@ export enum PaymentMethod {
     CreditCard = "CARD",
     BancolombiaTransfer = "BANCOLOMBIA_TRANSFER"
 }
-
-export enum UserType {
-    Person = "PERSON"
-}
